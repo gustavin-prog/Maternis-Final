@@ -1,0 +1,62 @@
+{
+  "name": "Maternis - Cuidado Materno",
+  "short_name": "Maternis",
+  "description": "Acompanhe a gestação, o bebê, vacinas e consultas, e registre cada momento no Diário do Bebê.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FFF8FB",
+  "theme_color": "#F78FB3",
+  "categories": ["health", "lifestyle", "medical"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Diário do Bebê",
+      "short_name": "Diário",
+      "description": "Abra o álbum, a linha do tempo e as recordações do bebê.",
+      "url": "./diario.html",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Calendário de Vacinas",
+      "short_name": "Vacinas",
+      "description": "Acompanhe as vacinas do bebê.",
+      "url": "./vacinas.html",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}

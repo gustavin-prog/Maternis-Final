@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#F78FB3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Maternis">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script>(function(){try{var t=localStorage.getItem('maternis-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-bs-theme',t);}catch(e){}})();</script>
+
+    <title>Maternis</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/maternis-theme.css">
+    <link rel="stylesheet" href="css/maternis-ui.css">
+    <link rel="stylesheet" href="css/valdenia.css">
+
+    <!-- SDK DO SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+
+        *{
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body{
+            background:#F8F4FF;
+            padding-bottom:110px;
+        }
+
+        /* HEADER */
+
+        .topo{
+
+            background:linear-gradient(135deg,#F78FB3,#D980FA);
+            color:white;
+            padding:96px 25px 45px;
+            border-bottom-left-radius:35px;
+            border-bottom-right-radius:35px;
+
+        }
+
+        .topo h2{
+            font-weight:700;
+        }
+
+        .topo p{
+            margin:0;
+            opacity:.9;
+        }
+
+        /* CARD IA */
+
+        .card-ia{
+
+            margin-top:-30px;
+            background:white;
+            border:none;
+            border-radius:20px;
+            box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+        }
+
+        .btn-ia{
+
+            background:#D980FA;
+            color:white;
+            border-radius:12px;
+
+        }
+
+        .btn-ia:hover{
+
+            background:#c15df2;
+            color:white;
+
+        }
+
+        /* MENU */
+
+        .titulo{
+
+            font-weight:600;
+            margin-top:30px;
+            margin-bottom:18px;
+
+        }
+
+        .menu-card{
+
+            background:white;
+            border:none;
+            border-radius:18px;
+            box-shadow:0 5px 15px rgba(0,0,0,.06);
+            transition:.3s;
+            cursor:pointer;
+
+        }
+
+        .menu-card:hover{
+
+            transform:translateY(-5px);
+
+        }
+
+        .icone{
+
+            width:65px;
+            height:65px;
+            border-radius:50%;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            font-size:28px;
+            margin:auto;
+            color:white;
+
+        }
+
+        .rosa{
+
+            background:#F78FB3;
+
+        }
+
+        .roxo{
+
+            background:#9B59B6;
+
+        }
+
+        .azul{
+
+            background:#6C63FF;
+
+        }
+
+        .verde{
+
+            background:#2ECC71;
+
+        }
+
+        .laranja{
+
+            background:#F39C12;
+
+        }
+
+        .vermelho{
+
+            background:#E74C3C;
+
+        }
+
+        .menu-card h6{
+
+            margin-top:15px;
+            font-weight:600;
+
+        }
+
+        /* MENU INFERIOR */
+
+        .bottom{
+
+            position:fixed;
+            bottom:0;
+            left:0;
+            width:100%;
+            z-index:1030;
+            background:var(--bg-surface);
+            border-top:1px solid var(--border-color);
+            box-shadow:0 -8px 24px rgba(0,0,0,.08);
+            padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+
+        }
+
+        .bottom-grid{
+
+            display:grid;
+            grid-template-columns:repeat(6, minmax(0, 1fr));
+            gap:2px;
+            max-width:720px;
+            margin:0 auto;
+
+        }
+
+        .bottom a{
+
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            gap:4px;
+            min-height:54px;
+            padding:4px 2px;
+            border-radius:14px;
+            color:var(--text-soft);
+            text-decoration:none;
+            font-size:10.5px;
+            font-weight:600;
+            line-height:1.15;
+            text-align:center;
+            transition:color .25s ease, background-color .25s ease, box-shadow .25s ease;
+
+        }
+
+        .bottom a i{
+
+            display:block;
+            font-size:21px;
+            line-height:1;
+
+        }
+
+        .bottom a span{
+
+            display:block;
+            max-width:100%;
+            word-break:break-word;
+
+        }
+
+        .bottom a:hover{
+
+            color:var(--maternis-pink-strong);
+            background:rgba(244,143,177,.12);
+
+        }
+
+        .bottom a.ativo{
+
+            color:var(--maternis-pink-strong);
+            background:rgba(244,143,177,.14);
+            box-shadow:0 0 0 1px rgba(244,143,177,.25), 0 0 16px rgba(244,143,177,.18);
+
+        }
+
+        [data-theme="dark"] .bottom{
+
+            background:var(--bg-surface) !important;
+            border-top-color:var(--border-color) !important;
+
+        }
+
+        [data-theme="dark"] .bottom a{
+
+            color:var(--text-soft) !important;
+
+        }
+
+        [data-theme="dark"] .bottom a:hover,
+        [data-theme="dark"] .bottom a.ativo{
+
+            color:var(--maternis-pink) !important;
+            background:rgba(247,161,190,.14);
+
+        }
+
+        @media (max-width:420px){
+
+            .bottom a{
+
+                min-height:50px;
+                font-size:9.5px;
+
+            }
+
+            .bottom a i{
+
+                font-size:19px;
+
+            }
+
+        }
+
+        .banner-mae img{
+            width:25%;
+            max-width: 220px;
+            height:auto;
+            display:block;
+            margin:0 auto;
+            border-radius:50px;
+        }
+
+        [data-theme="dark"] .menu-card h6,
+        [data-theme="dark"] .menu-card .text-dark { color: var(--text-main) !important; }
+        [data-theme="dark"] .card-ia { background: var(--bg-surface) !important; }
+        [data-theme="dark"] .titulo { color: var(--text-strong) !important; }
+
+    </style>
+
+</head>
+<body class="theme-lavender has-bottom-nav">
+
+<header class="maternis-pill-nav" aria-label="Navegação principal">
+    <a class="pill-brand" href="index.html" aria-label="Maternis - Início">
+        <span class="pill-brand-icon"><i class="fa-solid fa-heart"></i></span>
+        <span class="pill-brand-text">Maternis</span>
+    </a>
+
+    <nav class="pill-links" aria-label="Seções do site">
+        <a class="pill-link pill-link-home" href="index.html">Início</a>
+        <a class="pill-link active" href="menu.html">Menu</a>
+        <button class="pill-link" type="button" data-bs-toggle="modal" data-bs-target="#modalSobre">
+            Sobre
+        </button>
+    </nav>
+
+    <div class="pill-actions">
+        <button class="pill-action pill-action-ghost" onclick="fazerLogout()">
+            <i class="bi bi-box-arrow-right"></i> Sair
+        </button>
+    </div>
+</header>
+
+<div class="topo">
+
+    <div class="container">
+        <h2>Olá, Mamãe 👋</h2>
+        <p>Bem-vinda ao Maternis</p>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <div class="card card-ia p-4">
+
+        <div class="row align-items-center">
+
+            <div class="banner-mae mt-3 mb-4 text-center">
+                <img src="img/bebe-mao.jpg" class="img-fluid rounded-4 shadow" alt="Mãe segurando bebê">
+            </div>
+
+            <h5 class="titulo">Funcionalidades</h5>
+
+            <div class="row g-3">
+
+                <div class="col-6">
+                    <a href="gestacao.html" class="text-decoration-none text-dark">
+                        <div class="card menu-card text-center p-3">
+                            <div class="icone rosa">
+                                <i class="bi bi-heart-pulse"></i>
+                            </div>
+                            <h6>Gestação</h6>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-6">
+                    <a href="bebe.html" class="text-decoration-none text-dark">
+                        <div class="card menu-card text-center p-3">
+                            <div class="icone roxo">
+                                <i class="bi bi-emoji-smile"></i>
+                            </div>
+                            <h6>Bebê</h6>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-6">
+                    <a href="vacinas.html" class="text-decoration-none text-dark">
+                        <div class="card menu-card text-center p-3">
+                            <div class="icone azul">
+                                <i class="bi bi-capsule"></i>
+                            </div>
+                            <h6>Vacinas</h6>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-6">
+                    <a href="consultas.html" class="text-decoration-none text-dark">
+                        <div class="card menu-card text-center p-3">
+                            <div class="icone verde">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <h6>Consultas</h6>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-6">
+                    <a href="dicas.html" class="text-decoration-none text-dark">
+                        <div class="card menu-card text-center p-3">
+                            <div class="icone laranja">
+                                <i class="bi bi-book-half"></i>
+                            </div>
+                            <h6>Dicas</h6>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-6">
+                    <a href="diario.html" class="text-decoration-none text-dark">
+                        <div class="card menu-card text-center p-3">
+                            <div class="icone roxo">
+                                <i class="bi bi-journal-album"></i>
+                            </div>
+                            <h6>Diário do Bebê</h6>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<nav class="bottom" aria-label="Navegação rápida">
+    <div class="bottom-grid">
+        <a href="gestacao.html" title="Gestação">
+            <i class="bi bi-heart-pulse"></i>
+            <span>Gestação</span>
+        </a>
+        <a href="bebe.html" title="Bebê">
+            <i class="bi bi-emoji-smile"></i>
+            <span>Bebê</span>
+        </a>
+        <a href="vacinas.html" title="Vacinas">
+            <i class="bi bi-capsule"></i>
+            <span>Vacinas</span>
+        </a>
+        <a href="consultas.html" title="Consultas">
+            <i class="bi bi-calendar-check"></i>
+            <span>Consultas</span>
+        </a>
+        <a href="dicas.html" title="Dicas">
+            <i class="bi bi-book-half"></i>
+            <span>Dicas</span>
+        </a>
+        <a href="diario.html" title="Diário do Bebê">
+            <i class="bi bi-journal-album"></i>
+            <span>Diário do Bebê</span>
+        </a>
+    </div>
+</nav>
+
+<!-- MODAL SOBRE -->
+<div class="modal fade maternis-about-modal" id="modalSobre" tabindex="-1" aria-labelledby="modalSobreTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <span class="about-eyebrow"><i class="fa-solid fa-heart"></i> Maternis</span>
+                    <h5 class="modal-title" id="modalSobreTitle">Sobre o Maternis</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="about-purpose">
+                    O Maternis é um <strong>centralizador de cuidado materno</strong> criado para acompanhar
+                    mães de primeira viagem desde a gestação até os primeiros anos do bebê. Reunimos, em um
+                    só lugar, informações de saúde, lembretes de consultas e vacinas, orientações práticas e
+                    ferramentas para registrar cada fase dessa jornada.
+                </p>
+                <p class="about-purpose">
+                    Nosso propósito é tornar a rotina mais leve, segura e organizada — para que a mãe possa
+                    cuidar de si e do bebê com mais confiança, sem perder nenhum momento importante.
+                </p>
+
+                <div class="about-divider"></div>
+
+                <h6 class="about-creators-title"><i class="fa-solid fa-code"></i> Criadores do projeto</h6>
+                <div class="creator-grid">
+                    <div class="creator-card">
+                        <div class="creator-avatar">DM</div>
+                        <strong>Daniel Melo</strong>
+                        <span>Desenvolvimento</span>
+                    </div>
+                    <div class="creator-card">
+                        <div class="creator-avatar">FG</div>
+                        <strong>Flávio Gustavo</strong>
+                        <span>Desenvolvimento</span>
+                    </div>
+                    <div class="creator-card">
+                        <div class="creator-avatar">JV</div>
+                        <strong>João Vitor</strong>
+                        <span>Desenvolvimento</span>
+                    </div>
+                </div>
+
+                <p class="about-footer-note">
+                    Feito com carinho para acompanhar cada fase da maternidade. 💗
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/theme.js" defer></script>
+<script src="js/valdenia.js" defer></script>
+
+<script>
+    const SUPABASE_URL = "https://llktarpnobeigwgxfwwz.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_OKqhjXKeDyuon0S05JJX-g_zvIl-Kk1";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function fazerLogout() {
+        if (confirm("Deseja realmente sair da sua conta?")) {
+            await supabaseClient.auth.signOut();
+            // Remove apenas os dados de autenticação, preservando o tema
+            // escolhido e as recordações do Diário do Bebê.
+            Object.keys(localStorage).forEach(function (chave) {
+                if (chave.indexOf('sb-') === 0 || chave.toLowerCase().indexOf('supabase') !== -1) {
+                    localStorage.removeItem(chave);
+                }
+            });
+            window.location.href = "index.html";
+        }
+    }
+</script>
+
+    <script src="js/pwa.js" defer></script>
+</body>
+</html>

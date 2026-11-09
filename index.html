@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#F78FB3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Maternis">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script>(function(){try{var t=localStorage.getItem('maternis-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-bs-theme',t);}catch(e){}})();</script>
+
+    <title>Maternis</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/maternis-theme.css">
+    <link rel="stylesheet" href="css/maternis-ui.css">
+    <link rel="stylesheet" href="css/valdenia.css">
+
+    <!-- SDK DO SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        *{
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body{
+            background:#FFF8FB;
+            padding-top:96px;
+        }
+
+        .hero{
+            min-height:85vh;
+            display:flex;
+            align-items:center;
+        }
+
+        .hero h1{
+            font-size:55px;
+            font-weight:700;
+            color:#444;
+        }
+
+        .hero h1 span{
+            color:#f48fb1;
+        }
+
+        .hero p{
+            color:#666;
+            font-size:18px;
+            margin:25px 0;
+        }
+
+        .btn-pink{
+            background:#f48fb1;
+            color:#fff;
+            padding:14px 35px;
+            border-radius:30px;
+            font-weight:600;
+            border:none;
+            transition:.3s;
+            text-decoration:none;
+            display:inline-block;
+        }
+
+        .btn-pink:hover{
+            background:#ec7ea5;
+            color:white;
+        }
+
+        .btn-outline-pink{
+            border:2px solid #f48fb1;
+            color:#f48fb1;
+            padding:10px 25px;
+            border-radius:30px;
+            font-weight:600;
+            transition:.3s;
+            background:transparent;
+        }
+
+        .btn-outline-pink:hover{
+            background:#f48fb1;
+            color:white;
+        }
+
+        .hero-img{
+            width:100%;
+            animation:flutuar 3s ease-in-out infinite;
+        }
+
+        @keyframes flutuar{
+            0%{ transform:translateY(0px); }
+            50%{ transform:translateY(-15px); }
+            100%{ transform:translateY(0px); }
+        }
+
+        .card-info{
+            background:white;
+            border:none;
+            border-radius:20px;
+            padding:30px;
+            text-align:center;
+            box-shadow:0 5px 20px rgba(0,0,0,.08);
+            transition:.3s;
+        }
+
+        .card-info:hover{
+            transform:translateY(-10px);
+        }
+
+        .card-info i{
+            font-size:45px;
+            color:#f48fb1;
+            margin-bottom:20px;
+        }
+
+        .card-info h4{
+            font-weight:600;
+            color:#444;
+        }
+
+        footer{
+            margin-top:100px;
+            background:#f48fb1;
+            color:white;
+            padding:25px;
+        }
+
+        [data-theme="dark"] footer {
+            background: linear-gradient(135deg, #a85d86, #7a4fa8);
+            color: #fff7fb;
+        }
+        
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="maternis-pill-nav" aria-label="Navegação principal">
+    <a class="pill-brand" href="index.html" aria-label="Maternis - Início">
+        <span class="pill-brand-icon"><i class="fa-solid fa-heart"></i></span>
+        <span class="pill-brand-text">Maternis</span>
+    </a>
+
+    <nav class="pill-links" aria-label="Seções do site">
+        <a class="pill-link pill-link-home active" href="index.html">Início</a>
+        <button class="pill-link" type="button" data-bs-toggle="modal" data-bs-target="#modalSobre">
+            Sobre
+        </button>
+    </nav>
+
+    <div class="pill-actions" id="areaUsuarioHome">
+        <button class="pill-action pill-action-primary" data-bs-toggle="modal" data-bs-target="#modalAuth">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar
+        </button>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1>
+                    Cuidando de cada fase da
+                    <span>maternidade.</span>
+                </h1>
+
+                <p>
+                    O Maternis acompanha mães desde a gestação até os
+                    primeiros anos do bebê, oferecendo informações,
+                    lembretes, acompanhamento do desenvolvimento infantil
+                    e uma assistente virtual inteligente para auxiliar em
+                    qualquer momento.
+                </p>
+
+                <div id="heroAcaoUsuario"></div>
+            </div>
+
+            <div class="col-lg-6 text-center">
+                <img class="hero-img"
+                    src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=900&auto=format&fit=crop"
+                    alt="Mãe e bebê">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container mb-5">
+    <div class="row g-4 justify-content-center">
+        <div class="col-lg-5">
+            <div class="card-info">
+                <i class="fa-solid fa-baby"></i>
+                <h4>Desenvolvimento do Bebê</h4>
+                <p>
+                    Acompanhe peso, altura, vacinas,
+                    consultas e marcos importantes.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card-info">
+                <i class="fa-solid fa-calendar-check"></i>
+                <h4>Agenda Inteligente</h4>
+                <p>
+                    Receba lembretes de exames,
+                    consultas e vacinas automaticamente.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MODAL DE AUTENTICAÇÃO -->
+<div class="modal fade" id="modalAuth" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold text-dark" id="modalAuthTitle">Entrar no Maternis</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="formAuth" onsubmit="event.preventDefault(); processarAuth();">
+                    <div class="mb-3">
+                        <label for="authEmail" class="form-label small fw-semibold text-muted">E-mail</label>
+                        <input type="email" class="form-control rounded-3" id="authEmail" placeholder="seu@email.com" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="authSenha" class="form-label small fw-semibold text-muted">Senha</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control rounded-start-3" id="authSenha" placeholder="******" required minlength="6">
+                            <span class="input-group-text bg-white rounded-end-3 cursor-pointer" onclick="toggleMostrarSenha()">
+                                <i class="fa-solid fa-eye text-muted" id="iconeOlho"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-pink w-100 py-2 shadow-sm mb-3" id="btnAuthSubmit">
+                        Entrar
+                    </button>
+                </form>
+                <div class="text-center small">
+                    <span id="txtModoAuth" class="text-muted">Ainda não tem conta?</span>
+                    <a href="#" class="fw-bold text-decoration-none ms-1" id="linkAlternarAuth" style="color: #f48fb1;" onclick="alternarModoAuth()">Criar conta</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL SOBRE -->
+<div class="modal fade maternis-about-modal" id="modalSobre" tabindex="-1" aria-labelledby="modalSobreTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <span class="about-eyebrow"><i class="fa-solid fa-heart"></i> Maternis</span>
+                    <h5 class="modal-title" id="modalSobreTitle">Sobre o Maternis</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="about-purpose">
+                    O Maternis é um <strong>centralizador de cuidado materno</strong> criado para acompanhar
+                    mães de primeira viagem desde a gestação até os primeiros anos do bebê. Reunimos, em um
+                    só lugar, informações de saúde, lembretes de consultas e vacinas, orientações práticas e
+                    ferramentas para registrar cada fase dessa jornada.
+                </p>
+                <p class="about-purpose">
+                    Nosso propósito é tornar a rotina mais leve, segura e organizada — para que a mãe possa
+                    cuidar de si e do bebê com mais confiança, sem perder nenhum momento importante.
+                </p>
+
+                <div class="about-divider"></div>
+
+                <h6 class="about-creators-title"><i class="fa-solid fa-code"></i> Criadores do projeto</h6>
+                <div class="creator-grid">
+                    <div class="creator-card">
+                        <div class="creator-avatar">DM</div>
+                        <strong>Daniel Melo</strong>
+                        <span>Desenvolvedor</span>
+                    </div>
+                    <div class="creator-card">
+                        <div class="creator-avatar">FG</div>
+                        <strong>Flávio Gustavo</strong>
+                        <span>Desenvolvedor</span>
+                    </div>
+                    <div class="creator-card">
+                        <div class="creator-avatar">JV</div>
+                        <strong>João Vitor</strong>
+                        <span>Desenvolvedor</span>
+                    </div>
+                </div>
+
+                <p class="about-footer-note">
+                    Feito com carinho para acompanhar cada fase da maternidade. 💗
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center">
+    © 2026 Maternis • Daniel Melo, Flávio Gustavo, João Vitor.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/theme.js" defer></script>
+<script src="js/valdenia.js" defer></script>
+
+<script>
+    const SUPABASE_URL = "https://llktarpnobeigwgxfwwz.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_OKqhjXKeDyuon0S05JJX-g_zvIl-Kk1";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let modoCadastro = false;
+
+    function toggleMostrarSenha() {
+        const inputSenha = document.getElementById('authSenha');
+        const iconeOlho = document.getElementById('iconeOlho');
+
+        if (inputSenha.type === 'password') {
+            inputSenha.type = 'text';
+            iconeOlho.classList.remove('fa-eye');
+            iconeOlho.classList.add('fa-eye-slash');
+        } else {
+            inputSenha.type = 'password';
+            iconeOlho.classList.remove('fa-eye-slash');
+            iconeOlho.classList.add('fa-eye');
+        }
+    }
+
+    function alternarModoAuth() {
+        modoCadastro = !modoCadastro;
+
+        document.getElementById('authEmail').value = '';
+        document.getElementById('authSenha').value = '';
+
+        const inputSenha = document.getElementById('authSenha');
+        const iconeOlho = document.getElementById('iconeOlho');
+        inputSenha.type = 'password';
+        iconeOlho.classList.remove('fa-eye-slash');
+        iconeOlho.classList.add('fa-eye');
+
+        document.getElementById('modalAuthTitle').textContent = modoCadastro ? 'Criar Nova Conta' : 'Entrar no Maternis';
+        document.getElementById('btnAuthSubmit').textContent = modoCadastro ? 'Cadastrar' : 'Entrar';
+        document.getElementById('txtModoAuth').textContent = modoCadastro ? 'Já possui uma conta?' : 'Ainda não tem conta?';
+        document.getElementById('linkAlternarAuth').textContent = modoCadastro ? 'Fazer login' : 'Criar conta';
+    }
+
+    async function processarAuth() {
+        const email = document.getElementById('authEmail').value;
+        const password = document.getElementById('authSenha').value;
+
+        if (modoCadastro) {
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) {
+                alert('Erro ao cadastrar: ' + error.message);
+            } else {
+                alert('Conta criada com sucesso!');
+                fecharModal();
+            }
+        } else {
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) {
+                alert('Erro ao entrar: ' + error.message);
+            } else {
+                fecharModal();
+                window.location.href = 'menu.html';
+            }
+        }
+    }
+
+    function fecharModal() {
+        const modalElement = document.getElementById('modalAuth');
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) modal.hide();
+        
+        document.getElementById('authEmail').value = '';
+        document.getElementById('authSenha').value = '';
+    }
+
+    async function fazerLogout() {
+        if (confirm("Deseja realmente sair da sua conta?")) {
+            await supabaseClient.auth.signOut();
+            // Remove apenas os dados de autenticação, preservando o tema
+            // escolhido e as recordações do Diário do Bebê.
+            Object.keys(localStorage).forEach(function (chave) {
+                if (chave.indexOf('sb-') === 0 || chave.toLowerCase().indexOf('supabase') !== -1) {
+                    localStorage.removeItem(chave);
+                }
+            });
+            window.location.href = 'index.html';
+        }
+    }
+
+    function atualizarHomeUsuario(session) {
+        const areaNav = document.getElementById('areaUsuarioHome');
+        const heroAcao = document.getElementById('heroAcaoUsuario');
+
+        if (session) {
+            const nomeUsuario = session.user.email.split('@')[0];
+            
+            // Botões "Olá" e "Sair" com estilo nativo na barra
+            areaNav.innerHTML = `
+                <div class="pill-user">
+                    <span class="pill-user-name">
+                        <i class="fa-solid fa-user-circle" style="color: #f48fb1;"></i> Olá, ${nomeUsuario}
+                    </span>
+                    <button class="pill-action pill-action-ghost" onclick="fazerLogout()">
+                        <i class="fa-solid fa-right-from-bracket"></i> Sair
+                    </button>
+                </div>
+            `;
+
+            // Botão principal no hero para abrir o menu
+            heroAcao.innerHTML = `
+                <a href="menu.html" class="btn btn-pink">
+                    <i class="fa-solid fa-table-cells-large me-2"></i> Acessar Menu
+                </a>
+            `;
+        } else {
+            areaNav.innerHTML = `
+                <button class="pill-action pill-action-primary" data-bs-toggle="modal" data-bs-target="#modalAuth">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar
+                </button>
+            `;
+            heroAcao.innerHTML = '';
+        }
+    }
+
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+        atualizarHomeUsuario(session);
+    });
+</script>
+
+    <script src="js/pwa.js" defer></script>
+</body>
+</html>

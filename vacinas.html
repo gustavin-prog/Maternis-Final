@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#F78FB3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Maternis">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script>(function(){try{var t=localStorage.getItem('maternis-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-bs-theme',t);}catch(e){}})();</script>
+    <title>Maternis - Calendário Digital de Vacinas (0 a 2 Anos)</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/maternis-theme.css">
+    <link rel="stylesheet" href="css/maternis-ui.css">
+    <link rel="stylesheet" href="css/valdenia.css">
+
+    <!-- SDK DO SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --primary-pink: #F78FB3;
+            --primary-purple: #D980FA;
+            --dark-purple: #8e44ad;
+            --soft-purple: #f3e5f5;
+            --soft-bg: #F8F4FF;
+            --card-shadow: 0 10px 25px rgba(217, 128, 250, 0.12);
+            --success-green: #2ecc71;
+            --warning-orange: #f39c12;
+            --danger-red: #e74c3c;
+        }
+
+        body {
+            background-color: var(--soft-bg);
+            font-family: 'Poppins', sans-serif;
+            color: #4a4a4a;
+        }
+
+        /* Top Bar Styling */
+        .topo {
+            background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
+            color: white;
+            padding: 20px 20px 45px 20px;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            box-shadow: 0 4px 20px rgba(217, 128, 250, 0.35);
+        }
+
+        .btn-voltar-topo {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-voltar-topo:hover {
+            color: white;
+            opacity: 0.85;
+            transform: translateX(-3px);
+        }
+
+        /* Modo escuro: garante branco puro no botão "Voltar ao menu" */
+        html[data-theme="dark"] .btn-voltar-topo,
+        html[data-theme="dark"] .btn-voltar-topo:hover,
+        html[data-theme="dark"] .btn-voltar-topo:focus,
+        html[data-theme="dark"] .btn-voltar-topo:active {
+            color: #FFFFFF !important;
+        }
+
+        .main-container {
+            margin-top: -25px;
+        }
+
+        /* Card Styles */
+        .card-custom {
+            background: #ffffff;
+            border-radius: 20px;
+            border: none;
+            box-shadow: var(--card-shadow);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .btn-maternis {
+            background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-maternis:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(217, 128, 250, 0.4);
+            color: white;
+        }
+
+        .btn-outline-maternis {
+            border: 2px solid var(--primary-purple);
+            color: var(--dark-purple);
+            border-radius: 12px;
+            font-weight: 600;
+            background: transparent;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-maternis:hover {
+            background: var(--primary-purple);
+            color: white;
+        }
+
+        /* Calendar Grid Component */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark-purple);
+            text-transform: capitalize;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            color: #888;
+            font-size: 0.8rem;
+            padding-bottom: 8px;
+        }
+
+        .calendar-day {
+            background: #fafafa;
+            border-radius: 12px;
+            min-height: 80px;
+            padding: 5px;
+            border: 1px solid #f0f0f0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--primary-purple);
+            background-color: #fdf8ff;
+        }
+
+        .calendar-day.empty {
+            background: transparent;
+            border: none;
+        }
+
+        .calendar-day.today {
+            border: 2px solid var(--primary-pink);
+            background-color: #fff5f8;
+        }
+
+        .day-number {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        /* Event Badges inside Calendar */
+        .event-badge {
+            font-size: 0.65rem;
+            padding: 3px 5px;
+            border-radius: 6px;
+            margin-bottom: 3px;
+            font-weight: 600;
+            line-height: 1.2;
+            word-break: break-word;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .badge-aplicada {
+            background-color: #E8F5E9;
+            color: #2E7D32;
+            border: 1px solid #C8E6C9;
+        }
+
+        .badge-proxima {
+            background-color: #F3E5F5;
+            color: #6A1B9A;
+            border: 1px solid #E1BEE7;
+        }
+
+        .badge-atrasada {
+            background-color: #FFEBEE;
+            color: #C62828;
+            border: 1px solid #FFCDD2;
+        }
+
+        /* Result Projection Banner */
+        .result-box {
+            background: linear-gradient(135deg, #fff5f8, #fbf0ff);
+            border: 2px dashed var(--primary-purple);
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .status-pill {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .status-pill.pendente { background: #fff3cd; color: #664d03; }
+        .status-pill.aplicada { background: #d1e7dd; color: #0f5132; }
+        .status-pill.atrasada { background: #f8d7da; color: #842029; }
+
+        @media (max-width: 768px) {
+            .calendar-day {
+                min-height: 60px;
+                padding: 3px;
+            }
+            .event-badge {
+                font-size: 0.58rem;
+            }
+        }
+        [data-theme="dark"] {
+            --soft-bg: #181320;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.28);
+        }
+        [data-theme="dark"] body { color: var(--text-main); }
+        [data-theme="dark"] .card-custom { background: var(--bg-surface) !important; }
+        [data-theme="dark"] .result-box { background: linear-gradient(135deg, rgba(247,143,179,0.1), rgba(217,128,250,0.12)) !important; border-color: var(--border-strong) !important; }
+        [data-theme="dark"] #listaHistorico .bg-light { background: var(--bg-surface-alt) !important; color: var(--text-main) !important; }
+    </style>
+</head>
+<body class="theme-lavender">
+
+<div class="topo">
+    <div class="container">
+        <!-- Botão Voltar ao Menu alinhado à esquerda no Topo -->
+        <a href="menu.html" class="btn-voltar-topo">
+            <i class="bi bi-arrow-left"></i> Voltar ao menu
+        </a>
+
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <h2 class="fw-bold mb-1"><i class="bi bi-calendar2-heart-fill me-2"></i>Calendário de Vacinas Maternis</h2>
+                <p class="mb-0 opacity-90">Acompanhamento completo de vacinação do bebê de 0 a 2 anos (PNI / SUS)</p>
+            </div>
+           
+            <div>
+                <span class="badge bg-white text-dark px-3 py-2 rounded-pill shadow-sm fs-6">
+                    <i class="bi bi-heart-fill text-danger me-1"></i> Maternis
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container main-container pb-5">
+    <div class="row g-4">
+        
+        <div class="col-lg-5">
+            <div class="card-custom">
+                <h5 class="fw-bold text-dark mb-3">
+                    <i class="bi bi-ui-checks me-2" style="color: var(--primary-purple);"></i> Selecionar e Registrar
+                </h5>
+
+                <form id="formVacina" onsubmit="event.preventDefault(); calcularEPreview();">
+                    <!-- Vaccine Dropdown with Optgroups -->
+                    <div class="mb-3">
+                        <label for="selectVacina" class="form-label fw-semibold small text-muted">Escolha a Vacina</label>
+                        <select id="selectVacina" class="form-select rounded-3 fs-6" onchange="aoSelecionarVacina()" required>
+                            <option value="" selected disabled>-- Selecione uma vacina --</option>
+                        </select>
+                    </div>
+
+                    <!-- Dose Info Card -->
+                    <div id="infoBox" class="alert alert-light border rounded-3 p-3 mb-3 d-none">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <strong class="text-dark" id="infoNomeVacina">-</strong>
+                            <span class="badge bg-secondary" id="infoFaixaEtaria">-</span>
+                        </div>
+                        <div class="small text-muted" id="infoDescricao">-</div>
+                    </div>
+
+                    <!-- Date Taken Picker -->
+                    <div class="mb-3">
+                        <label for="inputDataDose" class="form-label fw-semibold small text-muted">Data da Dose Aplicada</label>
+                        <input type="date" id="inputDataDose" class="form-control rounded-3" onchange="calcularEPreview()" required>
+                    </div>
+
+                    <button type="button" class="btn btn-maternis w-100 fs-6 shadow-sm mb-3" onclick="salvarVacina()">
+                        <i class="bi bi-calendar-plus me-1"></i> Salvar no Calendário
+                    </button>
+                </form>
+
+                <!-- Calculation Result Card -->
+                <div id="resultadoBox" class="result-box d-none">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold text-dark" id="resNomeVacina">Vacina</span>
+                        <span id="resBadge" class="status-pill pendente">Projeção</span>
+                    </div>
+
+                    <div class="mb-2 small">
+                        <span class="text-muted"><i class="bi bi-check-circle-fill text-success me-1"></i> Dose aplicada em:</span>
+                        <strong id="resDataAtual" class="text-dark d-block fs-6">-</strong>
+                    </div>
+
+                    <div class="p-2 bg-white rounded-3 border">
+                        <small class="text-primary fw-semibold d-block">
+                            <i class="bi bi-arrow-right-circle-fill me-1"></i> Próxima Dose (<span id="resProximaDoseNome">Próxima</span>):
+                        </small>
+                        <strong id="resProximaData" class="fs-5" style="color: var(--dark-purple);">-</strong>
+                        <div id="resContadorDias" class="small text-muted mt-1">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saved Records Panel -->
+            <div class="card-custom">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-journal-bookmark-fill me-2" style="color: var(--primary-pink);"></i>Cartão de Vacinação
+                    </h6>
+                    <button class="btn btn-sm btn-link text-danger p-0 text-decoration-none" onclick="limparRegistros()">Limpar Tudo</button>
+                </div>
+                <div id="listaHistorico" class="d-flex flex-column gap-2" style="max-height: 280px; overflow-y: auto;">
+                    <div class="text-center text-muted py-3 small">Nenhuma vacina salva ainda.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card-custom">
+                <!-- Navigation -->
+                <div class="calendar-header">
+                    <button class="btn btn-outline-maternis btn-sm" onclick="mudarMes(-1)">
+                        <i class="bi bi-chevron-left"></i> Anterior
+                    </button>
+                    <div class="calendar-title" id="tituloMesAno">Mês Ano</div>
+                    <button class="btn btn-outline-maternis btn-sm" onclick="mudarMes(1)">
+                        Próximo <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Calendar Days Header -->
+                <div class="calendar-grid mb-1">
+                    <div class="calendar-day-header">Dom</div>
+                    <div class="calendar-day-header">Seg</div>
+                    <div class="calendar-day-header">Ter</div>
+                    <div class="calendar-day-header">Qua</div>
+                    <div class="calendar-day-header">Qui</div>
+                    <div class="calendar-day-header">Sex</div>
+                    <div class="calendar-day-header">Sáb</div>
+                </div>
+
+                <!-- Calendar Days Grid -->
+                <div class="calendar-grid" id="gridCalendario">
+                    <!-- Dynamic Days Rendered Here -->
+                </div>
+
+                <!-- Calendar Legend -->
+                <div class="d-flex flex-wrap align-items-center justify-content-center gap-3 mt-4 pt-3 border-top small text-muted">
+                    <div class="d-flex align-items-center gap-1">
+                        <span class="badge badge-aplicada">💉 Dose Aplicada</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        <span class="badge badge-proxima">⏳ Próxima Dose</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        <span class="badge badge-atrasada">⚠️ Atrasada</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// ==========================================
+// 1. CREDENCIAIS E CLIENTE DO SUPABASE
+// ==========================================
+const SUPABASE_URL = "https://llktarpnobeigwgxfwwz.supabase.co";
+const SUPABASE_KEY = "sb_publishable_OKqhjXKeDyuon0S05JJX-g_zvIl-Kk1";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Calendário Oficial de Vacinas do SUS/PNI (0 a 2 Anos)
+const CATALOGO_VACINAS = [
+    // Ao Nascer
+    { id: 'bcg', grupo: 'Ao Nascer', nome: 'BCG', doseAtual: 'Dose Única', proximaDose: 'Nenhuma', intervaloDias: 0 },
+    { id: 'hep_b_0', grupo: 'Ao Nascer', nome: 'Hepatite B', doseAtual: 'Dose de Nascimento', proximaDose: 'Pentavalente (1ª Dose)', intervaloDias: 60 },
+
+    // 2 Meses
+    { id: 'penta_1', grupo: '2 Meses', nome: 'Pentavalente (1ª Dose)', doseAtual: '1ª Dose', proximaDose: 'Pentavalente (2ª Dose)', intervaloDias: 60 },
+    { id: 'vip_1', grupo: '2 Meses', nome: 'Poliomielite VIP (1ª Dose)', doseAtual: '1ª Dose', proximaDose: 'Poliomielite VIP (2ª Dose)', intervaloDias: 60 },
+    { id: 'pneumo_1', grupo: '2 Meses', nome: 'Pneumocócica 10V (1ª Dose)', doseAtual: '1ª Dose', proximaDose: 'Pneumocócica 10V (2ª Dose)', intervaloDias: 60 },
+    { id: 'rota_1', grupo: '2 Meses', nome: 'Rotavírus Humano (1ª Dose)', doseAtual: '1ª Dose', proximaDose: 'Rotavírus Humano (2ª Dose)', intervaloDias: 60 },
+
+    // 3 Meses
+    { id: 'meningo_1', grupo: '3 Meses', nome: 'Meningocócica C (1ª Dose)', doseAtual: '1ª Dose', proximaDose: 'Meningocócica C (2ª Dose)', intervaloDias: 60 },
+
+    // 4 Meses
+    { id: 'penta_2', grupo: '4 Meses', nome: 'Pentavalente (2ª Dose)', doseAtual: '2ª Dose', proximaDose: 'Pentavalente (3ª Dose)', intervaloDias: 60 },
+    { id: 'vip_2', grupo: '4 Meses', nome: 'Poliomielite VIP (2ª Dose)', doseAtual: '2ª Dose', proximaDose: 'Poliomielite VIP (3ª Dose)', intervaloDias: 60 },
+    { id: 'pneumo_2', grupo: '4 Meses', nome: 'Pneumocócica 10V (2ª Dose)', doseAtual: '2ª Dose', proximaDose: 'Pneumocócica 10V (Reforço)', intervaloDias: 240 },
+    { id: 'rota_2', grupo: '4 Meses', nome: 'Rotavírus Humano (2ª Dose)', doseAtual: '2ª Dose', proximaDose: 'Nenhuma (Esquema Completo)', intervaloDias: 0 },
+
+    // 5 Meses
+    { id: 'meningo_2', grupo: '5 Meses', nome: 'Meningocócica C (2ª Dose)', doseAtual: '2ª Dose', proximaDose: 'Meningocócica C (Reforço)', intervaloDias: 210 },
+
+    // 6 Meses
+    { id: 'penta_3', grupo: '6 Meses', nome: 'Pentavalente (3ª Dose)', doseAtual: '3ª Dose', proximaDose: 'Reforço DTP (15 Meses)', intervaloDias: 270 },
+    { id: 'vip_3', grupo: '6 Meses', nome: 'Poliomielite VIP (3ª Dose)', doseAtual: '3ª Dose', proximaDose: 'Poliomielite VIP (1º Reforço)', intervaloDias: 270 },
+    { id: 'gripe_1', grupo: '6 Meses', nome: 'Influenza / Gripe (1ª Dose)', doseAtual: '1ª Dose', proximaDose: 'Influenza / Gripe (2ª Dose)', intervaloDias: 30 },
+
+    // 9 Meses
+    { id: 'febre_a_1', grupo: '9 Meses', nome: 'Febre Amarela (1ª Dose)', doseAtual: '1ª Dose', proximaDose: 'Febre Amarela (Reforço 4 anos)', intervaloDias: 1095 },
+
+    // 12 Meses (1 Ano)
+    { id: 'triplice_v_1', grupo: '12 Meses', nome: 'Tríplice Viral - SRC (1ª Dose)', doseAtual: '1ª Dose', proximaDose: 'Tetra Viral / Varicela (15 Meses)', intervaloDias: 90 },
+    { id: 'pneumo_reforco', grupo: '12 Meses', nome: 'Pneumocócica 10V (Reforço)', doseAtual: 'Reforço', proximaDose: 'Nenhuma (Esquema Completo)', intervaloDias: 0 },
+    { id: 'meningo_reforco', grupo: '12 Meses', nome: 'Meningocócica C (Reforço)', doseAtual: 'Reforço', proximaDose: 'Nenhuma (Esquema Completo)', intervaloDias: 0 },
+
+    // 15 Meses (1 Ano e 3 Meses)
+    { id: 'dtp_ref_1', grupo: '15 Meses', nome: 'DTP (1º Reforço)', doseAtual: '1º Reforço', proximaDose: 'DTP (2º Reforço aos 4 anos)', intervaloDias: 1095 },
+    { id: 'polio_ref_1', grupo: '15 Meses', nome: 'Poliomielite (1º Reforço)', doseAtual: '1º Reforço', proximaDose: 'Poliomielite (2º Reforço aos 4 anos)', intervaloDias: 1095 },
+    { id: 'hep_a_1', grupo: '15 Meses', nome: 'Hepatite A (Dose Única)', doseAtual: 'Dose Única', proximaDose: 'Nenhuma', intervaloDias: 0 },
+    { id: 'tetra_v_1', grupo: '15 Meses', nome: 'Tetra Viral / Varicela', doseAtual: '1ª Dose', proximaDose: 'Varicela (2ª Dose aos 4 anos)', intervaloDias: 1095 },
+
+    // 24 Meses (2 Anos)
+    { id: 'gripe_anual', grupo: '24 Meses', nome: 'Influenza / Gripe (Dose Anual)', doseAtual: 'Dose Anual', proximaDose: 'Próxima Campanha Anual', intervaloDias: 365 }
+];
+
+// Estado da Aplicação
+let dataAtualCalendario = new Date();
+let vacinasSalvas = [];
+let vacinaPreview = null;
+
+window.onload = function() {
+    popularSelectVacinas();
+    document.getElementById('inputDataDose').value = new Date().toISOString().split('T')[0];
+    carregarVacinasDoBanco();
+};
+
+// ==========================================
+// 2. BUSCAR DADOS DO SUPABASE
+// ==========================================
+async function carregarVacinasDoBanco() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+
+    if (!session) {
+        vacinasSalvas = JSON.parse(localStorage.getItem('maternis_vacinas_0a2')) || [];
+        renderizarHistorico();
+        renderizarCalendario();
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from('vacinas_bebe')
+        .select('*')
+        .eq('user_id', session.user.id);
+
+    if (error) {
+        console.error("Erro ao carregar do Supabase:", error.message);
+        return;
+    }
+
+    if (data) {
+        vacinasSalvas = data.map(v => ({
+            idBanco: v.id,
+            id: v.vacina_id,
+            nome: v.nome,
+            grupo: v.grupo,
+            doseAtual: v.dose_atual,
+            proximaDose: v.proxima_dose,
+            dataAplicada: v.data_aplicada,
+            dataProxima: v.data_proxima,
+            status: v.status
+        }));
+    }
+
+    renderizarHistorico();
+    renderizarCalendario();
+}
+
+function popularSelectVacinas() {
+    const select = document.getElementById('selectVacina');
+    select.innerHTML = '<option value="" selected disabled>-- Selecione uma vacina --</option>';
+
+    const grupos = {};
+    CATALOGO_VACINAS.forEach(v => {
+        if (!grupos[v.grupo]) grupos[v.grupo] = [];
+        grupos[v.grupo].push(v);
+    });
+
+    for (const [grupo, lista] of Object.entries(grupos)) {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = `👶 ${grupo}`;
+        
+        lista.forEach(vacina => {
+            const opt = document.createElement('option');
+            opt.value = vacina.id;
+            opt.textContent = `💉 ${vacina.nome}`;
+            optgroup.appendChild(opt);
+        });
+
+        select.appendChild(optgroup);
+    }
+}
+
+function aoSelecionarVacina() {
+    const id = document.getElementById('selectVacina').value;
+    const vacina = CATALOGO_VACINAS.find(v => v.id === id);
+    if (!vacina) return;
+
+    const infoBox = document.getElementById('infoBox');
+    infoBox.classList.remove('d-none');
+
+    document.getElementById('infoNomeVacina').textContent = vacina.nome;
+    document.getElementById('infoFaixaEtaria').textContent = vacina.grupo;
+
+    if (vacina.intervaloDias === 0) {
+        document.getElementById('infoDescricao').textContent = `Dose única ou final do esquema nessa fase.`;
+    } else {
+        document.getElementById('infoDescricao').textContent = `Dose: ${vacina.doseAtual} → Próxima: ${vacina.proximaDose} (${vacina.intervaloDias} dias de intervalo).`;
+    }
+
+    calcularEPreview();
+}
+
+function calcularEPreview() {
+    const id = document.getElementById('selectVacina').value;
+    const dataInput = document.getElementById('inputDataDose').value;
+
+    if (!id || !dataInput) return;
+
+    const vacina = CATALOGO_VACINAS.find(v => v.id === id);
+    if (!vacina) return;
+
+    const dataDose1 = new Date(dataInput + 'T00:00:00');
+    let dataProxima = null;
+
+    if (vacina.intervaloDias > 0) {
+        dataProxima = new Date(dataDose1);
+        dataProxima.setDate(dataProxima.getDate() + vacina.intervaloDias);
+    }
+
+    vacinaPreview = {
+        id: vacina.id,
+        nome: vacina.nome,
+        grupo: vacina.grupo,
+        doseAtual: vacina.doseAtual,
+        proximaDose: vacina.proximaDose,
+        dataAplicada: dataInput,
+        dataProxima: dataProxima ? dataProxima.toISOString().split('T')[0] : null,
+        status: 'Aplicada',
+        isPreview: true
+    };
+
+    const resBox = document.getElementById('resultadoBox');
+    resBox.classList.remove('d-none');
+
+    document.getElementById('resNomeVacina').textContent = vacina.nome;
+    document.getElementById('resDataAtual').textContent = formatarDataBR(dataInput);
+    document.getElementById('resProximaDoseNome').textContent = vacina.proximaDose;
+
+    if (dataProxima) {
+        const dataStr = dataProxima.toISOString().split('T')[0];
+        document.getElementById('resProximaData').textContent = formatarDataBR(dataStr);
+
+        const hoje = new Date();
+        hoje.setHours(0,0,0,0);
+        const diffDias = Math.ceil((dataProxima.getTime() - hoje.getTime()) / (1000 * 3600 * 24));
+
+        const badge = document.getElementById('resBadge');
+        const contador = document.getElementById('resContadorDias');
+
+        if (diffDias < 0) {
+            badge.className = 'status-pill atrasada';
+            badge.textContent = 'Atrasada';
+            contador.textContent = `Atenção: A próxima dose está atrasada há ${Math.abs(diffDias)} dia(s).`;
+        } else if (diffDias === 0) {
+            badge.className = 'status-pill pendente';
+            badge.textContent = 'Hoje!';
+            contador.textContent = `A próxima dose deve ser aplicada HOJE!`;
+        } else {
+            badge.className = 'status-pill pendente';
+            badge.textContent = 'Agendada';
+            contador.textContent = `Faltam cerca de ${diffDias} dia(s) para a dose recomendada.`;
+        }
+    } else {
+        document.getElementById('resProximaData').textContent = "Dose Única / Final do Esquema";
+        document.getElementById('resContadorDias').textContent = "Esquema completo para essa vacina nesta fase.";
+        document.getElementById('resBadge').className = "status-pill aplicada";
+        document.getElementById('resBadge').textContent = "Concluída";
+    }
+
+    renderizarCalendario();
+}
+
+// ==========================================
+// 3. SALVAR NO SUPABASE
+// ==========================================
+async function salvarVacina() {
+    if (!vacinaPreview) {
+        alert("Selecione uma vacina e insira a data antes de salvar.");
+        return;
+    }
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+
+    if (!session) {
+        alert("Inicie sessão para guardar os seus registos na conta.");
+        return;
+    }
+
+    const novaVacina = { ...vacinaPreview, isPreview: false };
+
+    const { data, error } = await supabaseClient
+        .from('vacinas_bebe')
+        .insert([{
+            user_id: session.user.id,
+            vacina_id: novaVacina.id,
+            nome: novaVacina.nome,
+            grupo: novaVacina.grupo,
+            dose_atual: novaVacina.doseAtual,
+            proxima_dose: novaVacina.proximaDose,
+            data_aplicada: novaVacina.dataAplicada,
+            data_proxima: novaVacina.dataProxima,
+            status: novaVacina.status
+        }])
+        .select();
+
+    if (error) {
+        alert("Erro ao guardar no Supabase: " + error.message);
+        return;
+    }
+
+    if (data && data.length > 0) {
+        novaVacina.idBanco = data[0].id;
+        vacinasSalvas.push(novaVacina);
+    }
+
+    vacinaPreview = null;
+    document.getElementById('resultadoBox').classList.add('d-none');
+    document.getElementById('selectVacina').value = '';
+    document.getElementById('infoBox').classList.add('d-none');
+
+    renderizarHistorico();
+    renderizarCalendario();
+}
+
+// ==========================================
+// 4. ATUALIZAR STATUS NO SUPABASE
+// ==========================================
+async function alternarStatusRegistro(idIdentificador) {
+    const item = vacinasSalvas.find(v => (v.idBanco || v.idRegistro) == idIdentificador);
+    if (!item) return;
+
+    const novoStatus = item.status === 'Aplicada' ? 'Pendente' : 'Aplicada';
+    item.status = novoStatus;
+
+    if (item.idBanco) {
+        await supabaseClient
+            .from('vacinas_bebe')
+            .update({ status: novoStatus })
+            .eq('id', item.idBanco);
+    }
+
+    renderizarHistorico();
+    renderizarCalendario();
+}
+
+// ==========================================
+// 5. APAGAR REGISTO NO SUPABASE
+// ==========================================
+async function removerRegistro(idIdentificador) {
+    const item = vacinasSalvas.find(v => (v.idBanco || v.idRegistro) == idIdentificador);
+
+    if (item && item.idBanco) {
+        const { error } = await supabaseClient
+            .from('vacinas_bebe')
+            .delete()
+            .eq('id', item.idBanco);
+
+        if (error) {
+            alert("Erro ao eliminar: " + error.message);
+            return;
+        }
+    }
+
+    vacinasSalvas = vacinasSalvas.filter(v => (v.idBanco || v.idRegistro) != idIdentificador);
+    renderizarHistorico();
+    renderizarCalendario();
+}
+
+// ==========================================
+// 6. APAGAR TUDO NO SUPABASE
+// ==========================================
+async function limparRegistros() {
+    if (confirm("Tem certeza que deseja apagar todo o cartão de vacinas?")) {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+
+        if (session) {
+            await supabaseClient
+                .from('vacinas_bebe')
+                .delete()
+                .eq('user_id', session.user.id);
+        }
+
+        vacinasSalvas = [];
+        localStorage.removeItem('maternis_vacinas_0a2');
+        renderizarHistorico();
+        renderizarCalendario();
+    }
+}
+
+// ==========================================
+// 7. RENDERIZAR HISTÓRICO
+// ==========================================
+function renderizarHistorico() {
+    const list = document.getElementById('listaHistorico');
+    list.innerHTML = '';
+
+    if (vacinasSalvas.length === 0) {
+        list.innerHTML = '<div class="text-center text-muted py-3 small">Nenhuma vacina salva ainda.</div>';
+        return;
+    }
+
+    vacinasSalvas.forEach(item => {
+        const idIdentificador = item.idBanco || item.idRegistro;
+        const isAplicada = item.status === 'Aplicada';
+        const div = document.createElement('div');
+        div.className = 'p-2 rounded-3 border bg-light d-flex align-items-center justify-content-between small';
+        
+        div.innerHTML = `
+            <div>
+                <strong class="d-block text-dark">💉 ${item.nome}</strong>
+                <span class="text-muted">Aplicada: ${formatarDataBR(item.dataAplicada)}</span><br>
+                ${item.dataProxima ? `<span class="fw-semibold" style="color:var(--dark-purple);">Próxima: ${formatarDataBR(item.dataProxima)}</span>` : '<span class="text-success fw-semibold">Dose Única</span>'}
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <button class="status-pill ${isAplicada ? 'aplicada' : 'pendente'} border-0" onclick="alternarStatusRegistro('${idIdentificador}')">
+                    ${isAplicada ? '✅ Aplicada' : '⏳ Pendente'}
+                </button>
+                <button class="btn btn-sm text-danger border-0 p-0" onclick="removerRegistro('${idIdentificador}')" title="Excluir">
+                    <i class="bi bi-trash fs-6"></i>
+                </button>
+            </div>
+        `;
+        list.appendChild(div);
+    });
+}
+
+function mudarMes(delta) {
+    dataAtualCalendario.setMonth(dataAtualCalendario.getMonth() + delta);
+    renderizarCalendario();
+}
+
+function renderizarCalendario() {
+    const grid = document.getElementById('gridCalendario');
+    grid.innerHTML = '';
+
+    const ano = dataAtualCalendario.getFullYear();
+    const mes = dataAtualCalendario.getMonth();
+
+    const opcoesMes = { month: 'long', year: 'numeric' };
+    document.getElementById('tituloMesAno').textContent = new Date(ano, mes).toLocaleDateString('pt-BR', opcoesMes);
+
+    const primeiroDiaSemana = new Date(ano, mes, 1).getDay();
+    const totalDiasMes = new Date(ano, mes + 1, 0).getDate();
+
+    const hojeStr = new Date().toISOString().split('T')[0];
+
+    let listaCompleta = [...vacinasSalvas];
+    if (vacinaPreview) {
+        listaCompleta.push(vacinaPreview);
+    }
+
+    for (let i = 0; i < primeiroDiaSemana; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'calendar-day empty';
+        grid.appendChild(emptyCell);
+    }
+
+    for (let dia = 1; dia <= totalDiasMes; dia++) {
+        const dataFormatadaStr = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+
+        const dayCell = document.createElement('div');
+        dayCell.className = 'calendar-day';
+        if (dataFormatadaStr === hojeStr) {
+            dayCell.classList.add('today');
+        }
+
+        const dayNum = document.createElement('div');
+        dayNum.className = 'day-number';
+        dayNum.textContent = dia;
+        dayCell.appendChild(dayNum);
+
+        listaCompleta.forEach(item => {
+            if (item.dataAplicada === dataFormatadaStr) {
+                const badge = document.createElement('div');
+                badge.className = `event-badge ${item.isPreview ? 'badge-proxima' : 'badge-aplicada'}`;
+                badge.innerHTML = `<span>💉 ${item.nome}</span>`;
+                dayCell.appendChild(badge);
+            }
+
+            if (item.dataProxima && item.dataProxima === dataFormatadaStr) {
+                const badge = document.createElement('div');
+                const isAtrasada = dataFormatadaStr < hojeStr;
+                badge.className = `event-badge ${isAtrasada ? 'badge-atrasada' : 'badge-proxima'}`;
+                badge.innerHTML = `<span>⏳ ${item.nome}</span>`;
+                dayCell.appendChild(badge);
+            }
+        });
+
+        grid.appendChild(dayCell);
+    }
+}
+
+function formatarDataBR(dataISO) {
+    if (!dataISO) return '';
+    const partes = dataISO.split('-');
+    if (partes.length !== 3) return dataISO;
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+</script>
+<script src="js/theme.js" defer></script>
+<script src="js/valdenia.js" defer></script>
+    <script src="js/pwa.js" defer></script>
+</body>
+</html>

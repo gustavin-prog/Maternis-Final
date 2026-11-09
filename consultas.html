@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#F78FB3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Maternis">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script>(function(){try{var t=localStorage.getItem('maternis-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-bs-theme',t);}catch(e){}})();</script>
+    <title>Consultas - Maternis</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/maternis-theme.css">
+    <link rel="stylesheet" href="css/maternis-ui.css">
+    <link rel="stylesheet" href="css/valdenia.css">
+
+    <!-- SDK DO SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body {
+            background: #F8F4FF;
+            font-family: 'Poppins', sans-serif;
+            color: #4a4a4a;
+        }
+
+        .topo {
+            background: linear-gradient(135deg, #F78FB3, #D980FA);
+            color: white;
+            padding: 20px 20px 45px 20px;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            box-shadow: 0 4px 20px rgba(217, 128, 250, 0.35);
+        }
+
+        .btn-voltar-topo {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-voltar-topo:hover {
+            color: white;
+            opacity: 0.85;
+            transform: translateX(-3px);
+        }
+
+        /* Modo escuro: garante branco puro no botão "Voltar ao menu" */
+        html[data-theme="dark"] .btn-voltar-topo,
+        html[data-theme="dark"] .btn-voltar-topo:hover,
+        html[data-theme="dark"] .btn-voltar-topo:focus,
+        html[data-theme="dark"] .btn-voltar-topo:active {
+            color: #FFFFFF !important;
+        }
+
+        .main-container {
+            margin-top: -25px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(217, 128, 250, 0.12);
+        }
+
+        .btn-salvar {
+            background: linear-gradient(135deg, #F78FB3, #D980FA);
+            color: white;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-salvar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(217, 128, 250, 0.4);
+            color: white;
+        }
+
+        .btn-salvar:disabled {
+            background: #ccc;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-notificacao {
+            background: #F78FB3;
+            color: white;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-notificacao:hover {
+            background: #ed719d;
+            color: white;
+        }
+
+        .consulta {
+            background: white;
+            border-radius: 15px;
+            padding: 18px;
+            margin-top: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .consulta-hoje {
+            border-left: 6px solid #D980FA;
+            background: #fdf8ff;
+        }
+
+        .consulta-proxima {
+            border-left: 6px solid #F78FB3;
+        }
+
+        .aviso-banner {
+            background: #f3e4ff;
+            color: #7735a0;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .consulta { background: var(--bg-surface) !important; color: var(--text-main) !important; }
+        [data-theme="dark"] .consulta h5 { color: var(--text-strong) !important; }
+        [data-theme="dark"] .aviso-banner { background: rgba(217, 128, 250, 0.16) !important; color: var(--maternis-purple) !important; border: 1px solid var(--border-color); }
+    </style>
+</head>
+
+<body class="theme-lavender">
+
+    <div class="topo">
+        <div class="container" style="max-width: 750px;">
+            <a href="menu.html" class="btn-voltar-topo">
+                <i class="bi bi-arrow-left"></i> Voltar ao menu
+            </a>
+
+            <div class="text-center">
+                <h3 class="fw-bold mb-1">📅 Minhas Consultas</h3>
+                <p class="mb-0 opacity-90">Organize seus compromissos com o Maternis</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container main-container mb-5" style="max-width: 750px;">
+
+        <div class="card p-4">
+            <h5 class="mb-3 text-secondary">Cadastrar consulta</h5>
+
+            <div class="mb-3">
+                <label for="medico" class="form-label fw-semibold text-muted">Médico / Especialidade</label>
+                <input type="text" class="form-control rounded-3" id="medico" placeholder="Ex: Dra. Mariana - Obstetra">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="data" class="form-label fw-semibold text-muted">Data</label>
+                    <input type="date" class="form-control rounded-3" id="data">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="hora" class="form-label fw-semibold text-muted">Horário</label>
+                    <input type="time" class="form-control rounded-3" id="hora">
+                </div>
+            </div>
+
+            <button class="btn btn-salvar w-100 py-2 mt-2" id="btnSalvarConsulta" onclick="salvarConsulta()">
+                <i class="bi bi-calendar-plus me-1"></i> Salvar Consulta
+            </button>
+
+            <div id="statusSalvar" class="mt-2 text-center small fw-bold"></div>
+
+            <hr>
+
+            <button class="btn btn-notificacao w-100 py-2" onclick="ativarNotificacoes()">
+                <i class="bi bi-bell me-1"></i> Ativar lembretes no navegador
+            </button>
+
+            <small class="text-muted mt-2 text-center d-block">
+                O Maternis emitirá notificações com 3 dias de antecedência, na véspera e no dia do exame.
+            </small>
+
+            <div id="statusNotificacao" class="mt-2 text-center small fw-semibold" role="status"></div>
+        </div>
+
+        <div id="avisoConsultas" class="mt-4"></div>
+
+        <h5 class="mt-4 text-secondary">Minhas consultas agendadas</h5>
+
+        <div id="lista"></div>
+
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://llktarpnobeigwgxfwwz.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_OKqhjXKeDyuon0S05JJX-g_zvIl-Kk1";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let usuarioAtual = null;
+        let consultas = [];
+
+        function dataDeHoje() {
+            const agora = new Date();
+            const ano = agora.getFullYear();
+            const mes = String(agora.getMonth() + 1).padStart(2, "0");
+            const dia = String(agora.getDate()).padStart(2, "0");
+            return `${ano}-${mes}-${dia}`;
+        }
+
+        function formatarData(dataISO) {
+            if (!dataISO) return "";
+            const [ano, mes, dia] = dataISO.split("-");
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        function calcularDiferencaDias(dataString) {
+            const hoje = new Date(dataDeHoje() + "T00:00:00");
+            const dataConsulta = new Date(dataString + "T00:00:00");
+            return Math.ceil((dataConsulta - hoje) / (1000 * 60 * 60 * 24));
+        }
+
+        function escaparHTML(valor) {
+            return String(valor).replace(/[&<>"']/g, caractere => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[caractere]);
+        }
+
+        async function inicializar() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = "index.html";
+                return;
+            }
+            usuarioAtual = session.user;
+            await carregarConsultasSupabase();
+        }
+
+        async function carregarConsultasSupabase() {
+            const { data, error } = await supabaseClient
+                .from('consultas')
+                .select('*')
+                .eq('user_id', usuarioAtual.id)
+                .order('data', { ascending: true })
+                .order('hora', { ascending: true });
+
+            if (error) {
+                console.error("Erro ao carregar consultas:", error);
+                return;
+            }
+
+            consultas = data || [];
+            renderizarConsultas();
+            processarLembretes();
+        }
+
+        async function salvarConsulta() {
+            const medico = document.getElementById("medico").value.trim();
+            const data = document.getElementById("data").value;
+            const hora = document.getElementById("hora").value;
+            const status = document.getElementById("statusSalvar");
+            const btn = document.getElementById("btnSalvarConsulta");
+
+            if (!medico || !data || !hora) {
+                alert("Preencha todos os campos.");
+                return;
+            }
+
+            if (data < dataDeHoje()) {
+                alert("Escolha a data de hoje ou uma data futura.");
+                return;
+            }
+
+            btn.disabled = true;
+            status.style.color = "#7735a0";
+            status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando consulta...';
+
+            const payload = {
+                user_id: usuarioAtual.id,
+                medico,
+                data,
+                hora
+            };
+
+            const { error } = await supabaseClient
+                .from('consultas')
+                .insert([payload]);
+
+            btn.disabled = false;
+
+            if (error) {
+                status.style.color = "red";
+                status.innerText = "Erro ao salvar consulta: " + error.message;
+            } else {
+                status.style.color = "green";
+                status.innerText = "Consulta salva com sucesso!";
+                document.getElementById("medico").value = "";
+                document.getElementById("data").value = "";
+                document.getElementById("hora").value = "";
+                await carregarConsultasSupabase();
+            }
+
+            setTimeout(() => { status.innerText = ""; }, 4000);
+        }
+
+        async function excluirConsulta(id) {
+            if (!confirm("Deseja realmente excluir esta consulta?")) return;
+
+            const { error } = await supabaseClient
+                .from('consultas')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                alert("Erro ao excluir: " + error.message);
+            } else {
+                await carregarConsultasSupabase();
+            }
+        }
+
+        function renderizarConsultas() {
+            const lista = document.getElementById("lista");
+            const aviso = document.getElementById("avisoConsultas");
+            const hoje = dataDeHoje();
+
+            lista.innerHTML = "";
+            aviso.innerHTML = "";
+
+            if (consultas.length === 0) {
+                lista.innerHTML = '<p class="text-center text-muted mt-3">Nenhuma consulta cadastrada no momento.</p>';
+                return;
+            }
+
+            const consultasHoje = consultas.filter(c => c.data === hoje);
+            const consultasProximas = consultas.filter(c => {
+                const diff = calcularDiferencaDias(c.data);
+                return diff > 0 && diff <= 3;
+            });
+
+            if (consultasHoje.length > 0 || consultasProximas.length > 0) {
+                let msg = "";
+                if (consultasHoje.length > 0) {
+                    msg += `<p class="mb-1"><i class="bi bi-exclamation-circle-fill me-1"></i> Você possui <strong>${consultasHoje.length} consulta(s) agendada(s) para hoje!</strong></p>`;
+                }
+                if (consultasProximas.length > 0) {
+                    msg += `<p class="mb-0"><i class="bi bi-clock-history me-1"></i> Você possui <strong>${consultasProximas.length} consulta(s) nos próximos 3 dias.</strong></p>`;
+                }
+
+                aviso.innerHTML = `<div class="aviso-banner">${msg}</div>`;
+            }
+
+            consultas.forEach(c => {
+                const diff = calcularDiferencaDias(c.data);
+                let classeEspecial = "";
+                let tagStatus = "";
+
+                if (diff === 0) {
+                    classeEspecial = " consulta-hoje";
+                    tagStatus = '<span class="badge bg-purple text-white" style="background:#D980FA;">Hoje</span>';
+                } else if (diff > 0 && diff <= 3) {
+                    classeEspecial = " consulta-proxima";
+                    tagStatus = `<span class="badge bg-warning text-dark">Em ${diff} dia${diff > 1 ? 's' : ''}</span>`;
+                }
+
+                const item = document.createElement("div");
+                item.className = "consulta" + classeEspecial;
+                item.innerHTML = `
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <h5 class="mb-0 text-dark">👩‍⚕️ ${escaparHTML(c.medico)}</h5>
+                            ${tagStatus}
+                        </div>
+                        <p class="mb-0 text-secondary small">
+                            <b><i class="bi bi-calendar-event"></i> Data:</b> ${formatarData(c.data)} &nbsp;|&nbsp;
+                            <b><i class="bi bi-clock"></i> Horário:</b> ${escaparHTML(c.hora).substring(0, 5)}
+                        </p>
+                    </div>
+
+                    <button class="btn btn-outline-danger btn-sm rounded-3" onclick="excluirConsulta('${c.id}')" title="Excluir">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                `;
+
+                lista.appendChild(item);
+            });
+        }
+
+        async function ativarNotificacoes() {
+            const status = document.getElementById("statusNotificacao");
+
+            if (!("Notification" in window)) {
+                status.textContent = "Seu navegador não oferece suporte a notificações.";
+                return;
+            }
+
+            if (Notification.permission === "denied") {
+                status.textContent = "Notificações bloqueadas no navegador. Altere as permissões do site.";
+                return;
+            }
+
+            try {
+                const permissao = await Notification.requestPermission();
+                if (permissao === "granted") {
+                    status.style.color = "green";
+                    status.textContent = "Notificações ativadas com sucesso!";
+                    processarLembretes();
+                } else {
+                    status.style.color = "red";
+                    status.textContent = "Permissão recusada pelo usuário.";
+                }
+            } catch (err) {
+                status.textContent = "Erro ao solicitar permissão de notificações.";
+            }
+        }
+
+        function processarLembretes() {
+            if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+            const notificadas = JSON.parse(localStorage.getItem("maternis_notificadas") || "{}");
+            const hoje = dataDeHoje();
+
+            consultas.forEach(c => {
+                const diff = calcularDiferencaDias(c.data);
+
+                if (diff >= 0 && diff <= 3) {
+                    const chaveAlerta = `${c.id}_dias_${diff}_${hoje}`;
+
+                    if (!notificadas[chaveAlerta]) {
+                        let texto = "";
+                        if (diff === 0) {
+                            texto = `Você tem consulta marcada para HOJE às ${c.hora.substring(0, 5)} com ${c.medico}.`;
+                        } else if (diff === 1) {
+                            texto = `Lembrete: sua consulta com ${c.medico} é amanhã às ${c.hora.substring(0, 5)}.`;
+                        } else {
+                            texto = `Atenção: faltam ${diff} dias para sua consulta com ${c.medico} (${formatarData(c.data)} às ${c.hora.substring(0, 5)}).`;
+                        }
+
+                        new Notification("Maternis - Lembrete de Consulta", {
+                            body: texto,
+                            icon: "https://cdn-icons-png.flaticon.com/512/3652/3652191.png"
+                        });
+
+                        notificadas[chaveAlerta] = true;
+                    }
+                }
+            });
+
+            localStorage.setItem("maternis_notificadas", JSON.stringify(notificadas));
+        }
+
+        window.onload = inicializar;
+
+        setInterval(() => {
+            renderizarConsultas();
+            processarLembretes();
+        }, 60000);
+
+        document.addEventListener("visibilitychange", () => {
+            if (!document.hidden) {
+                renderizarConsultas();
+                processarLembretes();
+            }
+        });
+    </script>
+    <script src="js/theme.js" defer></script>
+    <script src="js/valdenia.js" defer></script>
+
+    <script src="js/pwa.js" defer></script>
+</body>
+
+</html>

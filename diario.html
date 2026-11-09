@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#F78FB3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Maternis">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script>(function(){try{var t=localStorage.getItem('maternis-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-bs-theme',t);}catch(e){}})();</script>
+
+    <title>Maternis - Diário do Bebê</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/maternis-theme.css">
+    <link rel="stylesheet" href="css/maternis-ui.css">
+    <link rel="stylesheet" href="css/valdenia.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-page);
+            color: var(--text-main);
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .diario-page {
+            width: 100%;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 34px 18px 70px;
+        }
+
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            color: var(--maternis-pink-strong);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color .2s ease, transform .2s ease;
+        }
+
+        .btn-voltar:hover {
+            color: var(--maternis-pink-deep);
+            transform: translateX(-3px);
+        }
+
+        /* =========================================================
+           HERO / CABEÇALHO
+           ========================================================= */
+        .diario-hero {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 32px;
+            padding: 36px 34px 30px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #f78fb3, #d980fa);
+            color: #fff;
+            box-shadow: 0 20px 50px rgba(217, 128, 250, 0.28);
+        }
+
+        .diario-hero::before,
+        .diario-hero::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.14);
+            pointer-events: none;
+        }
+
+        .diario-hero::before {
+            width: 230px;
+            height: 230px;
+            top: -110px;
+            right: -70px;
+        }
+
+        .diario-hero::after {
+            width: 150px;
+            height: 150px;
+            bottom: -80px;
+            left: -35px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            opacity: 0.92;
+        }
+
+        .diario-hero h1 {
+            margin: 10px 0 8px;
+            color: #fff;
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .diario-hero p {
+            max-width: 640px;
+            margin: 0;
+            color: rgba(255, 255, 255, 0.93);
+            font-size: 0.98rem;
+            line-height: 1.6;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .btn-exportar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 13px 24px;
+            border: 0;
+            border-radius: 999px;
+            background: #fff;
+            color: #a83d69;
+            font-family: inherit;
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(90, 30, 75, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.4);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .btn-exportar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(90, 30, 75, 0.28), 0 0 22px rgba(255, 255, 255, 0.45);
+        }
+
+        .btn-exportar i {
+            font-size: 1.08rem;
+        }
+
+        .btn-hero-ghost {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color .25s ease, transform .25s ease;
+        }
+
+        .btn-hero-ghost:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .stat-card {
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .stat-card strong {
+            display: block;
+            margin-bottom: 2px;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .stat-card span {
+            color: rgba(255, 255, 255, 0.86);
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        /* =========================================================
+           FORMULÁRIO
+           ========================================================= */
+        .card-editor {
+            margin-bottom: 34px;
+            padding: 26px 28px;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            background: var(--bg-surface);
+            box-shadow: 0 14px 34px var(--shadow-color);
+        }
+
+        .card-editor h2 {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0 0 20px;
+            color: var(--maternis-pink-deep);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        label,
+        .form-label {
+            margin-bottom: 6px;
+            color: var(--maternis-pink-deep);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .form-control,
+        .form-select {
+            padding: 10px 14px;
+            border: 1.5px solid var(--input-border);
+            border-radius: 12px;
+            background: var(--input-bg);
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--maternis-pink-strong);
+            background: var(--input-bg);
+            color: var(--text-main);
+            box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-soft);
+        }
+
+        textarea.form-control {
+            min-height: 104px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        input[type="file"].form-control {
+            padding: 8px 12px;
+        }
+
+        input[type="file"]::file-selector-button {
+            margin-right: 10px;
+            padding: 7px 12px;
+            border: 0;
+            border-radius: 8px;
+            background: var(--bg-surface-alt);
+            color: var(--maternis-pink-deep);
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .form-hint {
+            display: block;
+            margin-top: 5px;
+            color: var(--text-soft);
+            font-size: 0.72rem;
+            line-height: 1.4;
+        }
+
+        .foto-preview-wrap {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 12px;
+            padding: 10px;
+            border: 1px dashed var(--border-strong);
+            border-radius: 14px;
+            background: var(--bg-surface-alt);
+        }
+
+        .foto-preview-wrap img {
+            width: 130px;
+            height: 98px;
+            border-radius: 10px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .btn-remover-foto {
+            padding: 7px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            background: var(--bg-surface);
+            color: #c0392b;
+            font-family: inherit;
+            font-size: 0.74rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-maternis {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: 0;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #f78fb3, #d980fa);
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(217, 128, 250, 0.25);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .btn-maternis:hover {
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 26px rgba(217, 128, 250, 0.32);
+        }
+
+        .btn-limpar {
+            padding: 12px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            background: var(--bg-surface-alt);
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color .25s ease, color .25s ease;
+        }
+
+        .btn-limpar:hover {
+            background: var(--bg-elevated);
+            color: var(--text-strong);
+        }
+
+        .status {
+            min-height: 20px;
+            margin-top: 14px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .status-ok {
+            color: #2e8b57;
+        }
+
+        .status-erro {
+            color: #c0392b;
+        }
+
+        .status-info {
+            color: var(--maternis-pink-deep);
+        }
+
+        /* =========================================================
+           SEÇÕES
+           ========================================================= */
+        .album-section,
+        .timeline-section {
+            margin-bottom: 36px;
+        }
+
+        .section-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .section-head h2 {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0;
+            color: var(--maternis-pink-deep);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .section-count {
+            padding: 5px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            background: var(--bg-surface-alt);
+            color: var(--text-soft);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .btn-ordem {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            background: var(--bg-surface);
+            color: var(--maternis-pink-deep);
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color .25s ease, border-color .25s ease;
+        }
+
+        .btn-ordem:hover {
+            border-color: var(--maternis-pink);
+            background: var(--bg-surface-alt);
+        }
+
+        /* =========================================================
+           ÁLBUM
+           ========================================================= */
+        .album-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 18px;
+        }
+
+        .album-card {
+            position: relative;
+            margin: 0;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--bg-surface);
+            box-shadow: 0 10px 26px var(--shadow-color);
+            cursor: zoom-in;
+            transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+        }
+
+        .album-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-strong);
+            box-shadow: 0 18px 36px var(--shadow-color), 0 0 22px rgba(244, 143, 177, 0.18);
+        }
+
+        .album-card:focus-visible {
+            outline: 3px solid var(--focus-ring);
+            outline-offset: 3px;
+        }
+
+        .album-card img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            background: var(--bg-surface-alt);
+        }
+
+        .album-card figcaption {
+            padding: 14px 16px 16px;
+        }
+
+        .album-card strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--text-strong);
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .album-data {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--maternis-pink-deep);
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        .album-card p {
+            margin: 8px 0 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+
+        .album-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.94);
+            color: #c0392b;
+            font-size: 0.86rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+            transition: transform .2s ease, background-color .2s ease;
+        }
+
+        .album-delete:hover {
+            background: #fff;
+            transform: scale(1.08);
+        }
+
+        /* =========================================================
+           LINHA DO TEMPO
+           ========================================================= */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            bottom: 10px;
+            left: 14px;
+            width: 3px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(244, 143, 177, 0.6), rgba(217, 128, 250, 0.6));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            top: 6px;
+            left: -40px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--maternis-pink);
+            border-radius: 50%;
+            background: var(--bg-surface);
+            color: var(--maternis-pink-strong);
+            font-size: 0.8rem;
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+
+        .timeline-card {
+            padding: 16px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            background: var(--bg-surface);
+            box-shadow: 0 8px 22px var(--shadow-color);
+        }
+
+        .timeline-top {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .timeline-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--maternis-pink-deep);
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .timeline-badge {
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: rgba(244, 143, 177, 0.14);
+            color: var(--maternis-pink-deep);
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .btn-excluir {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            margin-left: auto;
+            border: 0;
+            border-radius: 50%;
+            background: transparent;
+            color: #c0392b;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: background-color .2s ease, transform .2s ease;
+        }
+
+        .btn-excluir:hover {
+            background: rgba(231, 76, 60, 0.12);
+            transform: scale(1.08);
+        }
+
+        .timeline-card h3 {
+            margin: 2px 0 6px;
+            color: var(--text-strong);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .timeline-card p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.86rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .timeline-photo {
+            display: block;
+            width: 100%;
+            max-width: 420px;
+            max-height: 280px;
+            margin-top: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            object-fit: cover;
+            cursor: zoom-in;
+        }
+
+        .timeline-peso {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(46, 204, 113, 0.12);
+            color: #1e8449;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .timeline-item.tipo-foto .timeline-marker {
+            border-color: #d980fa;
+            color: #a55eea;
+        }
+
+        .timeline-item.tipo-peso .timeline-marker {
+            border-color: #2ecc71;
+            color: #1e8449;
+        }
+
+        .timeline-item.tipo-anotacao .timeline-marker {
+            border-color: #f39c12;
+            color: #b9770e;
+        }
+
+        .tipo-foto .timeline-badge {
+            background: rgba(217, 128, 250, 0.14);
+            color: #8e44ad;
+        }
+
+        .tipo-peso .timeline-badge {
+            background: rgba(46, 204, 113, 0.14);
+            color: #1e8449;
+        }
+
+        .tipo-anotacao .timeline-badge {
+            background: rgba(243, 156, 18, 0.14);
+            color: #b9770e;
+        }
+
+        /* =========================================================
+           ESTADOS VAZIOS
+           ========================================================= */
+        .empty-state {
+            grid-column: 1 / -1;
+            padding: 42px 22px;
+            border: 2px dashed var(--border-strong);
+            border-radius: 20px;
+            background: var(--bg-surface-alt);
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .empty-state i {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--maternis-pink);
+            font-size: 2rem;
+        }
+
+        .empty-state strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--text-strong);
+            font-size: 0.95rem;
+        }
+
+        .empty-state p {
+            margin: 0;
+            font-size: 0.84rem;
+            line-height: 1.5;
+        }
+
+        .diario-note {
+            margin: 26px 0 0;
+            color: var(--text-soft);
+            font-size: 0.76rem;
+            text-align: center;
+        }
+
+        /* =========================================================
+           MODAL DA FOTO
+           ========================================================= */
+        .foto-modal-content {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            background: var(--bg-surface);
+            box-shadow: 0 26px 70px rgba(0, 0, 0, 0.35);
+        }
+
+        .foto-modal-img {
+            display: block;
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            background: #1a121d;
+        }
+
+        .foto-modal-caption {
+            padding: 18px 22px 22px;
+        }
+
+        .foto-modal-caption strong {
+            display: block;
+            color: var(--text-strong);
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .foto-modal-date {
+            display: inline-block;
+            margin-top: 3px;
+            color: var(--maternis-pink-deep);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .foto-modal-caption p {
+            margin: 8px 0 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .foto-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.58);
+            color: #fff;
+            font-size: 1.2rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .foto-modal-close:hover {
+            background: rgba(0, 0, 0, 0.75);
+        }
+
+        /* =========================================================
+           MODO ESCURO
+           ========================================================= */
+        [data-theme="dark"] .diario-hero h1,
+        [data-theme="dark"] .diario-hero p,
+        [data-theme="dark"] .diario-hero span,
+        [data-theme="dark"] .diario-hero strong,
+        [data-theme="dark"] .hero-eyebrow,
+        [data-theme="dark"] .stat-card strong,
+        [data-theme="dark"] .stat-card span {
+            color: #fff !important;
+        }
+
+        [data-theme="dark"] .stat-card span {
+            color: rgba(255, 255, 255, 0.86) !important;
+        }
+
+        [data-theme="dark"] .btn-exportar {
+            color: #a83d69 !important;
+        }
+
+        [data-theme="dark"] .section-head h2,
+        [data-theme="dark"] .card-editor h2,
+        [data-theme="dark"] .album-data,
+        [data-theme="dark"] .timeline-date,
+        [data-theme="dark"] .timeline-badge,
+        [data-theme="dark"] .btn-ordem,
+        [data-theme="dark"] .foto-modal-date {
+            color: var(--maternis-pink) !important;
+        }
+
+        [data-theme="dark"] .tipo-foto .timeline-badge {
+            background: rgba(217, 128, 250, 0.18) !important;
+            color: #e0a0fb !important;
+        }
+
+        [data-theme="dark"] .tipo-peso .timeline-badge {
+            background: rgba(46, 204, 113, 0.18) !important;
+            color: #8fe3b0 !important;
+        }
+
+        [data-theme="dark"] .tipo-anotacao .timeline-badge {
+            background: rgba(243, 156, 18, 0.18) !important;
+            color: #ffd38a !important;
+        }
+
+        [data-theme="dark"] .timeline-item.tipo-foto .timeline-marker {
+            border-color: #e0a0fb;
+            color: #e0a0fb;
+        }
+
+        [data-theme="dark"] .timeline-item.tipo-peso .timeline-marker {
+            border-color: #2ecc71;
+            color: #8fe3b0;
+        }
+
+        [data-theme="dark"] .timeline-item.tipo-anotacao .timeline-marker {
+            border-color: #f39c12;
+            color: #ffd38a;
+        }
+
+        [data-theme="dark"] .timeline-peso {
+            background: rgba(46, 204, 113, 0.18);
+            color: #8fe3b0;
+        }
+
+        [data-theme="dark"] .status-ok {
+            color: #7ee2a8;
+        }
+
+        [data-theme="dark"] .status-erro {
+            color: #f5a3a3;
+        }
+
+        [data-theme="dark"] .status-info {
+            color: var(--maternis-pink);
+        }
+
+        [data-theme="dark"] .album-delete {
+            background: rgba(35, 26, 39, 0.92);
+            color: #f5a3a3;
+        }
+
+        /* =========================================================
+           RESPONSIVIDADE
+           ========================================================= */
+        @media (max-width: 640px) {
+            .diario-page {
+                padding: 24px 14px 80px;
+            }
+
+            .diario-hero {
+                padding: 28px 22px 24px;
+                border-radius: 24px;
+            }
+
+            .hero-actions {
+                align-items: stretch;
+            }
+
+            .btn-exportar,
+            .btn-hero-ghost {
+                width: 100%;
+            }
+
+            .hero-stats {
+                gap: 7px;
+            }
+
+            .stat-card {
+                padding: 10px 11px;
+            }
+
+            .stat-card strong {
+                font-size: 1rem;
+            }
+
+            .stat-card span {
+                font-size: 0.65rem;
+            }
+
+            .card-editor {
+                padding: 20px 18px;
+            }
+
+            .album-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .album-card figcaption {
+                padding: 10px 12px 12px;
+            }
+
+            .album-card strong {
+                font-size: 0.84rem;
+            }
+
+            .album-card p {
+                font-size: 0.74rem;
+            }
+
+            .timeline {
+                padding-left: 34px;
+            }
+
+            .timeline::before {
+                left: 12px;
+            }
+
+            .timeline-marker {
+                left: -34px;
+                width: 26px;
+                height: 26px;
+                font-size: 0.72rem;
+            }
+
+            .timeline-card {
+                padding: 14px;
+            }
+
+            .status {
+                text-align: left;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .diario-hero,
+            .btn-exportar,
+            .btn-hero-ghost,
+            .album-card,
+            .timeline-card,
+            .btn-maternis {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="theme-lavender">
+
+    <main class="diario-page">
+
+        <a href="menu.html" class="btn-voltar">
+            <i class="fa-solid fa-arrow-left"></i> Voltar ao menu
+        </a>
+
+        <!-- CABEÇALHO -->
+        <header class="diario-hero">
+            <div class="hero-content">
+                <div class="hero-eyebrow">
+                    <i class="fa-solid fa-heart"></i> Recordações do bebê
+                </div>
+                <h1>📖 Diário do Bebê</h1>
+                <p>
+                    Guarde fotos, marcos, pesos e anotações de cada fase. Monte um álbum de recordações
+                    e acompanhe a história do seu bebê em uma linha do tempo cheia de carinho.
+                </p>
+
+                <div class="hero-actions">
+                    <button type="button" class="btn-exportar" onclick="exportarDiarioPDF()">
+                        <i class="bi bi-file-earmark-pdf-fill"></i> Exportar Diário em PDF
+                    </button>
+                    <button type="button" class="btn-hero-ghost" onclick="irParaFormulario()">
+                        <i class="bi bi-plus-lg"></i> Nova recordação
+                    </button>
+                </div>
+
+                <div class="hero-stats" aria-label="Resumo do diário">
+                    <div class="stat-card">
+                        <strong id="statTotal">0</strong>
+                        <span>Recordações</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong id="statFotos">0</strong>
+                        <span>Fotos no álbum</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong id="statPeso">—</strong>
+                        <span>Último peso</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- NOVO REGISTRO -->
+        <section class="card-editor" id="novoRegistro" aria-labelledby="tituloNovoRegistro">
+            <h2 id="tituloNovoRegistro"><i class="bi bi-plus-circle"></i> Nova recordação</h2>
+
+            <form id="formRegistro" novalidate>
+                <div class="row g-3">
+                    <div class="col-sm-6 col-lg-4">
+                        <label for="tipoRegistro">Tipo de registro</label>
+                        <select id="tipoRegistro" class="form-select">
+                            <option value="marco">🌟 Marco</option>
+                            <option value="foto">📷 Foto</option>
+                            <option value="peso">⚖️ Peso</option>
+                            <option value="anotacao">📝 Anotação</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-4">
+                        <label for="dataRegistro">Data</label>
+                        <input type="date" id="dataRegistro" class="form-control" required>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-4" id="campoPeso" hidden>
+                        <label for="pesoRegistro">Peso (kg)</label>
+                        <input type="number" id="pesoRegistro" class="form-control" step="0.01" min="0.1" max="40"
+                            placeholder="Ex.: 4.250" inputmode="decimal">
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-0">
+                    <div class="col-12">
+                        <label for="tituloRegistro">Título</label>
+                        <input type="text" id="tituloRegistro" class="form-control" maxlength="80"
+                            placeholder="Ex.: Primeiro sorriso">
+                    </div>
+
+                    <div class="col-12">
+                        <label for="descricaoRegistro">Legenda / anotação</label>
+                        <textarea id="descricaoRegistro" class="form-control" maxlength="600"
+                            placeholder="Conte como foi esse momento..."></textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="fotoRegistro" id="labelFoto">Foto (opcional)</label>
+                        <input type="file" id="fotoRegistro" class="form-control" accept="image/*">
+                        <small class="form-hint">
+                            A imagem é otimizada automaticamente e fica salva apenas neste dispositivo.
+                        </small>
+
+                        <div class="foto-preview-wrap" id="fotoPreviewWrap" hidden>
+                            <img id="fotoPreview" alt="Pré-visualização da foto selecionada">
+                            <button type="button" class="btn-remover-foto" id="btnRemoverFoto"
+                                onclick="removerFotoSelecionada()" hidden>
+                                <i class="bi bi-x-lg"></i> Remover foto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-limpar" onclick="limparFormulario()">
+                        <i class="bi bi-eraser"></i> Limpar
+                    </button>
+                    <button type="submit" class="btn-maternis" id="btnSalvar">
+                        <i class="bi bi-heart-fill"></i> Salvar recordação
+                    </button>
+                </div>
+
+                <div class="status" id="status" role="status" aria-live="polite"></div>
+            </form>
+        </section>
+
+        <!-- ÁLBUM DE FOTOS -->
+        <section class="album-section" aria-labelledby="tituloAlbum">
+            <div class="section-head">
+                <h2 id="tituloAlbum"><i class="bi bi-images"></i> Álbum de Fotos</h2>
+                <span class="section-count" id="albumCount">0 fotos</span>
+            </div>
+            <div class="album-grid" id="albumGrid"></div>
+        </section>
+
+        <!-- LINHA DO TEMPO -->
+        <section class="timeline-section" aria-labelledby="tituloTimeline">
+            <div class="section-head">
+                <h2 id="tituloTimeline"><i class="bi bi-clock-history"></i> Linha do Tempo</h2>
+                <button type="button" class="btn-ordem" id="btnOrdem" onclick="alternarOrdem()">
+                    <i class="bi bi-sort-down"></i> Mais recentes primeiro
+                </button>
+            </div>
+            <div class="timeline" id="timeline"></div>
+        </section>
+
+        <p class="diario-note">
+            <i class="bi bi-shield-check"></i>
+            Suas recordações ficam salvas apenas neste dispositivo. Exporte em PDF para guardar uma cópia.
+        </p>
+
+    </main>
+
+    <!-- MODAL DE VISUALIZAÇÃO DA FOTO -->
+    <div class="modal fade" id="modalFoto" tabindex="-1" aria-labelledby="modalFotoTitulo" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content foto-modal-content">
+                <button type="button" class="foto-modal-close" data-bs-dismiss="modal" aria-label="Fechar foto">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                <img class="foto-modal-img" id="modalFotoImg" src="" alt="Foto ampliada do bebê">
+                <div class="foto-modal-caption">
+                    <strong id="modalFotoTitulo"></strong>
+                    <span class="foto-modal-date" id="modalFotoData"></span>
+                    <p id="modalFotoLegenda"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/theme.js" defer></script>
+    <script src="js/valdenia.js" defer></script>
+    <script src="js/pwa.js" defer></script>
+
+    <script>
+        (function () {
+            'use strict';
+
+            const STORAGE_KEY = 'maternis-diario-bebe-v1';
+            const MAX_FOTO_LADO = 1000;
+            const MAX_FOTO_BYTES = 15 * 1024 * 1024;
+
+            const TIPOS = {
+                marco: { rotulo: 'Marco', icone: 'bi-flag-fill', classe: 'tipo-marco' },
+                foto: { rotulo: 'Foto', icone: 'bi-camera-fill', classe: 'tipo-foto' },
+                peso: { rotulo: 'Peso', icone: 'bi-speedometer2', classe: 'tipo-peso' },
+                anotacao: { rotulo: 'Anotação', icone: 'bi-journal-text', classe: 'tipo-anotacao' }
+            };
+
+            let registros = [];
+            let fotoPendente = null;
+            let ordemCrescente = true;
+            let statusTimer = null;
+
+            /* =====================================================
+               UTILITÁRIOS
+               ===================================================== */
+            function escaparHTML(valor) {
+                return String(valor == null ? '' : valor).replace(/[&<>"']/g, function (caractere) {
+                    return {
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#39;'
+                    }[caractere];
+                });
+            }
+
+            function gerarId() {
+                if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+                    return window.crypto.randomUUID();
+                }
+                return 'r-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+            }
+
+            function hojeISO() {
+                const agora = new Date();
+                const local = new Date(agora.getTime() - agora.getTimezoneOffset() * 60000);
+                return local.toISOString().slice(0, 10);
+            }
+
+            function formatarData(dataISO) {
+                if (!dataISO) return '';
+                const partes = String(dataISO).split('-');
+                if (partes.length !== 3) return String(dataISO);
+                return partes[2] + '/' + partes[1] + '/' + partes[0];
+            }
+
+            function formatarPeso(valor) {
+                const numero = Number(valor);
+                if (!isFinite(numero)) return '—';
+                return numero.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 3,
+                    maximumFractionDigits: 3
+                });
+            }
+
+            function compararCronologico(a, b) {
+                const dataA = a.data || '';
+                const dataB = b.data || '';
+                if (dataA !== dataB) return dataA < dataB ? -1 : 1;
+                const criadoA = a.criadoEm || '';
+                const criadoB = b.criadoEm || '';
+                if (criadoA === criadoB) return 0;
+                return criadoA < criadoB ? -1 : 1;
+            }
+
+            function compararRecente(a, b) {
+                return compararCronologico(b, a);
+            }
+
+            function mostrarStatus(mensagem, tipo) {
+                const el = document.getElementById('status');
+                if (!el) return;
+                el.className = 'status status-' + (tipo || 'info');
+                el.textContent = mensagem;
+                clearTimeout(statusTimer);
+                statusTimer = setTimeout(function () {
+                    el.textContent = '';
+                    el.className = 'status';
+                }, tipo === 'erro' ? 7000 : 4500);
+            }
+
+            function limparStatus() {
+                const el = document.getElementById('status');
+                if (!el) return;
+                el.textContent = '';
+                el.className = 'status';
+                clearTimeout(statusTimer);
+            }
+
+            /* =====================================================
+               PERSISTÊNCIA
+               ===================================================== */
+            function carregarRegistros() {
+                let dados = [];
+                try {
+                    const bruto = localStorage.getItem(STORAGE_KEY);
+                    dados = bruto ? JSON.parse(bruto) : [];
+                } catch (erro) {
+                    dados = [];
+                }
+
+                if (!Array.isArray(dados)) dados = [];
+
+                registros = dados
+                    .filter(function (item) {
+                        return item && typeof item === 'object' && item.id && item.data;
+                    })
+                    .map(function (item) {
+                        return {
+                            id: String(item.id),
+                            tipo: TIPOS[item.tipo] ? item.tipo : 'anotacao',
+                            data: String(item.data),
+                            titulo: String(item.titulo || 'Recordação'),
+                            descricao: String(item.descricao || ''),
+                            peso: typeof item.peso === 'number' && item.peso > 0 ? item.peso : null,
+                            foto: typeof item.foto === 'string' && item.foto.indexOf('data:image/') === 0 ? item.foto : null,
+                            criadoEm: item.criadoEm || new Date().toISOString()
+                        };
+                    });
+            }
+
+            function persistirRegistros() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(registros));
+                    return true;
+                } catch (erro) {
+                    mostrarStatus(
+                        'Não foi possível salvar: o armazenamento do navegador está cheio. Exclua fotos antigas ou use uma imagem menor.',
+                        'erro'
+                    );
+                    return false;
+                }
+            }
+
+            /* =====================================================
+               FOTO
+               ===================================================== */
+            function processarImagem(arquivo) {
+                return new Promise(function (resolve, reject) {
+                    if (!arquivo || !arquivo.type || arquivo.type.indexOf('image/') !== 0) {
+                        reject(new Error('Selecione um arquivo de imagem (JPG, PNG ou WEBP).'));
+                        return;
+                    }
+
+                    if (arquivo.size > MAX_FOTO_BYTES) {
+                        reject(new Error('A foto é muito grande. Escolha uma imagem de até 15 MB.'));
+                        return;
+                    }
+
+                    const leitor = new FileReader();
+
+                    leitor.onload = function () {
+                        const imagem = new Image();
+
+                        imagem.onload = function () {
+                            let largura = imagem.naturalWidth || imagem.width;
+                            let altura = imagem.naturalHeight || imagem.height;
+
+                            if (!largura || !altura) {
+                                reject(new Error('Não foi possível ler as dimensões da foto.'));
+                                return;
+                            }
+
+                            const maiorLado = Math.max(largura, altura);
+                            if (maiorLado > MAX_FOTO_LADO) {
+                                const proporcao = MAX_FOTO_LADO / maiorLado;
+                                largura = Math.round(largura * proporcao);
+                                altura = Math.round(altura * proporcao);
+                            }
+
+                            const canvas = document.createElement('canvas');
+                            canvas.width = largura;
+                            canvas.height = altura;
+
+                            const contexto = canvas.getContext('2d');
+                            if (!contexto) {
+                                reject(new Error('Seu navegador não conseguiu processar a imagem.'));
+                                return;
+                            }
+
+                            contexto.fillStyle = '#ffffff';
+                            contexto.fillRect(0, 0, largura, altura);
+                            contexto.drawImage(imagem, 0, 0, largura, altura);
+
+                            try {
+                                resolve(canvas.toDataURL('image/jpeg', 0.78));
+                            } catch (erro) {
+                                reject(new Error('Não foi possível otimizar a foto.'));
+                            }
+                        };
+
+                        imagem.onerror = function () {
+                            reject(new Error('O arquivo selecionado não é uma imagem válida.'));
+                        };
+
+                        imagem.src = leitor.result;
+                    };
+
+                    leitor.onerror = function () {
+                        reject(new Error('Falha ao carregar a foto. Tente novamente.'));
+                    };
+
+                    leitor.readAsDataURL(arquivo);
+                });
+            }
+
+            async function aoSelecionarFoto(evento) {
+                const arquivo = evento.target.files && evento.target.files[0];
+                const wrap = document.getElementById('fotoPreviewWrap');
+                const preview = document.getElementById('fotoPreview');
+                const btnRemover = document.getElementById('btnRemoverFoto');
+
+                fotoPendente = null;
+                wrap.hidden = true;
+                btnRemover.hidden = true;
+                preview.removeAttribute('src');
+
+                if (!arquivo) return;
+
+                try {
+                    mostrarStatus('Preparando a foto...', 'info');
+                    fotoPendente = await processarImagem(arquivo);
+                    preview.src = fotoPendente;
+                    wrap.hidden = false;
+                    btnRemover.hidden = false;
+                    limparStatus();
+                } catch (erro) {
+                    evento.target.value = '';
+                    fotoPendente = null;
+                    wrap.hidden = true;
+                    btnRemover.hidden = true;
+                    mostrarStatus(erro.message, 'erro');
+                }
+            }
+
+            function removerFotoSelecionada() {
+                fotoPendente = null;
+                document.getElementById('fotoRegistro').value = '';
+                document.getElementById('fotoPreviewWrap').hidden = true;
+                document.getElementById('btnRemoverFoto').hidden = true;
+                document.getElementById('fotoPreview').removeAttribute('src');
+                limparStatus();
+            }
+
+            /* =====================================================
+               FORMULÁRIO
+               ===================================================== */
+            function aoMudarTipo() {
+                const tipo = document.getElementById('tipoRegistro').value;
+                const campoPeso = document.getElementById('campoPeso');
+                const titulo = document.getElementById('tituloRegistro');
+                const labelFoto = document.getElementById('labelFoto');
+
+                campoPeso.hidden = tipo !== 'peso';
+                labelFoto.textContent = tipo === 'foto' ? 'Foto *' : 'Foto (opcional)';
+
+                if (tipo === 'peso') {
+                    titulo.placeholder = 'Ex.: Consulta de rotina';
+                } else if (tipo === 'foto') {
+                    titulo.placeholder = 'Ex.: Primeiro banho';
+                } else if (tipo === 'anotacao') {
+                    titulo.placeholder = 'Ex.: Nosso dia hoje';
+                } else {
+                    titulo.placeholder = 'Ex.: Primeiro sorriso';
+                }
+            }
+
+            function irParaFormulario() {
+                const secao = document.getElementById('novoRegistro');
+                if (!secao) return;
+                secao.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                setTimeout(function () {
+                    const tipo = document.getElementById('tipoRegistro');
+                    if (tipo) tipo.focus({ preventScroll: true });
+                }, 450);
+            }
+
+            function limparFormulario() {
+                const formulario = document.getElementById('formRegistro');
+                formulario.reset();
+                fotoPendente = null;
+                document.getElementById('fotoPreviewWrap').hidden = true;
+                document.getElementById('btnRemoverFoto').hidden = true;
+                document.getElementById('fotoPreview').removeAttribute('src');
+                document.getElementById('dataRegistro').value = hojeISO();
+                document.getElementById('tipoRegistro').value = 'marco';
+                aoMudarTipo();
+                limparStatus();
+            }
+
+            function salvarRegistro(evento) {
+                evento.preventDefault();
+
+                const tipo = document.getElementById('tipoRegistro').value;
+                const data = document.getElementById('dataRegistro').value;
+                let titulo = document.getElementById('tituloRegistro').value.trim();
+                const descricao = document.getElementById('descricaoRegistro').value.trim();
+                const pesoTexto = document.getElementById('pesoRegistro').value;
+                const peso = pesoTexto ? Number(pesoTexto) : null;
+
+                if (!data) {
+                    mostrarStatus('Escolha a data da recordação.', 'erro');
+                    return;
+                }
+
+                if (tipo === 'foto' && !fotoPendente) {
+                    mostrarStatus('Selecione uma foto para salvar no álbum.', 'erro');
+                    return;
+                }
+
+                if (tipo === 'peso' && (!peso || !isFinite(peso) || peso <= 0)) {
+                    mostrarStatus('Informe o peso do bebê em kg.', 'erro');
+                    return;
+                }
+
+                if (tipo === 'marco' && !titulo) {
+                    mostrarStatus('Dê um título ao marco para encontrá-lo depois.', 'erro');
+                    return;
+                }
+
+                if (tipo === 'anotacao' && !descricao) {
+                    mostrarStatus('Escreva a anotação antes de salvar.', 'erro');
+                    return;
+                }
+
+                if (!titulo) {
+                    if (tipo === 'foto') titulo = 'Foto do bebê';
+                    else if (tipo === 'peso') titulo = 'Peso: ' + formatarPeso(peso) + ' kg';
+                    else titulo = 'Anotação';
+                }
+
+                const registro = {
+                    id: gerarId(),
+                    tipo: tipo,
+                    data: data,
+                    titulo: titulo,
+                    descricao: descricao,
+                    peso: tipo === 'peso' ? peso : null,
+                    foto: fotoPendente || null,
+                    criadoEm: new Date().toISOString()
+                };
+
+                registros.push(registro);
+
+                if (!persistirRegistros()) {
+                    registros.pop();
+                    return;
+                }
+
+                renderizarTudo();
+                limparFormulario();
+                mostrarStatus('Recordação salva com carinho! 💗', 'ok');
+            }
+
+            /* =====================================================
+               RENDERIZAÇÃO
+               ===================================================== */
+            function atualizarEstatisticas() {
+                const fotos = registros.filter(function (item) { return item.foto; });
+                const comPeso = registros
+                    .filter(function (item) { return typeof item.peso === 'number' && item.peso > 0; })
+                    .sort(compararCronologico);
+
+                const ultimoPeso = comPeso.length ? comPeso[comPeso.length - 1].peso : null;
+
+                document.getElementById('statTotal').textContent = String(registros.length);
+                document.getElementById('statFotos').textContent = String(fotos.length);
+                document.getElementById('statPeso').textContent = ultimoPeso ? formatarPeso(ultimoPeso) + ' kg' : '—';
+            }
+
+            function renderizarAlbum() {
+                const grade = document.getElementById('albumGrid');
+                const contador = document.getElementById('albumCount');
+                const fotos = registros
+                    .filter(function (item) { return item.foto; })
+                    .sort(compararRecente);
+
+                contador.textContent = fotos.length + (fotos.length === 1 ? ' foto' : ' fotos');
+
+                if (!fotos.length) {
+                    grade.innerHTML =
+                        '<div class="empty-state">' +
+                        '<i class="bi bi-camera"></i>' +
+                        '<strong>Seu álbum está esperando a primeira foto</strong>' +
+                        '<p>Adicione uma imagem no formulário acima para começar a montar as recordações do bebê.</p>' +
+                        '</div>';
+                    return;
+                }
+
+                grade.innerHTML = fotos.map(function (item) {
+                    const legenda = item.descricao
+                        ? '<p>' + escaparHTML(item.descricao) + '</p>'
+                        : '';
+
+                    return (
+                        '<figure class="album-card" tabindex="0" role="button" ' +
+                        'aria-label="Ampliar foto: ' + escaparHTML(item.titulo) + '" ' +
+                        'onclick="abrirFoto(\'' + item.id + '\')">' +
+                        '<img src="' + item.foto + '" alt="' + escaparHTML(item.descricao || item.titulo) + '" loading="lazy">' +
+                        '<button type="button" class="album-delete" title="Excluir foto" ' +
+                        'aria-label="Excluir ' + escaparHTML(item.titulo) + '" ' +
+                        'onclick="event.stopPropagation(); excluirRegistro(\'' + item.id + '\')">' +
+                        '<i class="bi bi-trash3"></i>' +
+                        '</button>' +
+                        '<figcaption>' +
+                        '<strong>' + escaparHTML(item.titulo) + '</strong>' +
+                        '<span class="album-data"><i class="bi bi-calendar-heart"></i> ' + formatarData(item.data) + '</span>' +
+                        legenda +
+                        '</figcaption>' +
+                        '</figure>'
+                    );
+                }).join('');
+            }
+
+            function renderizarTimeline() {
+                const timeline = document.getElementById('timeline');
+                const ordenados = registros.slice().sort(ordemCrescente ? compararCronologico : compararRecente);
+
+                if (!ordenados.length) {
+                    timeline.innerHTML =
+                        '<div class="empty-state">' +
+                        '<i class="bi bi-journal-album"></i>' +
+                        '<strong>A linha do tempo começa com você</strong>' +
+                        '<p>Registre um marco, uma foto, o peso ou uma anotação para ver a história do bebê aqui.</p>' +
+                        '</div>';
+                    return;
+                }
+
+                timeline.innerHTML = ordenados.map(function (item) {
+                    const meta = TIPOS[item.tipo] || TIPOS.anotacao;
+                    const foto = item.foto
+                        ? '<img class="timeline-photo" src="' + item.foto + '" alt="' +
+                          escaparHTML(item.descricao || item.titulo) + '" ' +
+                          'onclick="abrirFoto(\'' + item.id + '\')">'
+                        : '';
+                    const peso = typeof item.peso === 'number' && item.peso > 0
+                        ? '<div class="timeline-peso"><i class="bi bi-speedometer2"></i> ' +
+                          formatarPeso(item.peso) + ' kg</div>'
+                        : '';
+                    const descricao = item.descricao
+                        ? '<p>' + escaparHTML(item.descricao) + '</p>'
+                        : '';
+
+                    return (
+                        '<article class="timeline-item ' + meta.classe + '">' +
+                        '<div class="timeline-marker"><i class="bi ' + meta.icone + '"></i></div>' +
+                        '<div class="timeline-card">' +
+                        '<div class="timeline-top">' +
+                        '<span class="timeline-date"><i class="bi bi-calendar-heart"></i> ' +
+                        formatarData(item.data) + '</span>' +
+                        '<span class="timeline-badge">' + meta.rotulo + '</span>' +
+                        '<button type="button" class="btn-excluir" title="Excluir recordação" ' +
+                        'aria-label="Excluir ' + escaparHTML(item.titulo) + '" ' +
+                        'onclick="excluirRegistro(\'' + item.id + '\')">' +
+                        '<i class="bi bi-trash3"></i>' +
+                        '</button>' +
+                        '</div>' +
+                        '<h3>' + escaparHTML(item.titulo) + '</h3>' +
+                        peso +
+                        descricao +
+                        foto +
+                        '</div>' +
+                        '</article>'
+                    );
+                }).join('');
+            }
+
+            function atualizarBotaoOrdem() {
+                const botao = document.getElementById('btnOrdem');
+                if (!botao) return;
+
+                if (ordemCrescente) {
+                    botao.innerHTML = '<i class="bi bi-sort-down"></i> Mais recentes primeiro';
+                    botao.setAttribute('aria-pressed', 'false');
+                    botao.title = 'Mostrar as recordações mais recentes primeiro';
+                } else {
+                    botao.innerHTML = '<i class="bi bi-sort-up"></i> Ordem cronológica';
+                    botao.setAttribute('aria-pressed', 'true');
+                    botao.title = 'Mostrar da recordação mais antiga para a mais recente';
+                }
+            }
+
+            function renderizarTudo() {
+                renderizarAlbum();
+                renderizarTimeline();
+                atualizarEstatisticas();
+                atualizarBotaoOrdem();
+            }
+
+            function alternarOrdem() {
+                ordemCrescente = !ordemCrescente;
+                atualizarBotaoOrdem();
+                renderizarTimeline();
+            }
+
+            /* =====================================================
+               EXCLUSÃO E VISUALIZAÇÃO
+               ===================================================== */
+            function excluirRegistro(id) {
+                const registro = registros.find(function (item) { return item.id === id; });
+                if (!registro) return;
+
+                if (!confirm('Excluir a recordação "' + registro.titulo + '"?')) return;
+
+                registros = registros.filter(function (item) { return item.id !== id; });
+
+                if (!persistirRegistros()) {
+                    carregarRegistros();
+                    renderizarTudo();
+                    return;
+                }
+
+                renderizarTudo();
+                mostrarStatus('Recordação excluída.', 'info');
+            }
+
+            function abrirFoto(id) {
+                const registro = registros.find(function (item) { return item.id === id; });
+                if (!registro || !registro.foto) return;
+
+                const modalEl = document.getElementById('modalFoto');
+                document.getElementById('modalFotoImg').src = registro.foto;
+                document.getElementById('modalFotoImg').alt = registro.descricao || registro.titulo;
+                document.getElementById('modalFotoTitulo').textContent = registro.titulo;
+                document.getElementById('modalFotoData').textContent = formatarData(registro.data);
+                document.getElementById('modalFotoLegenda').textContent = registro.descricao || '';
+
+                if (window.bootstrap && window.bootstrap.Modal) {
+                    window.bootstrap.Modal.getOrCreateInstance(modalEl).show();
+                } else {
+                    window.open(registro.foto, '_blank', 'noopener');
+                }
+            }
+
+            /* =====================================================
+               EXPORTAÇÃO EM PDF
+               ===================================================== */
+            function exportarDiarioPDF() {
+                if (!registros.length) {
+                    mostrarStatus('Adicione pelo menos uma recordação antes de exportar o diário.', 'info');
+                    irParaFormulario();
+                    return;
+                }
+
+                const janela = window.open('', '_blank');
+                if (!janela) {
+                    alert('Permita pop-ups no navegador para exportar o diário em PDF.');
+                    return;
+                }
+
+                const ordenados = registros.slice().sort(compararCronologico);
+                const fotos = ordenados.filter(function (item) { return item.foto; });
+                const comPeso = ordenados
+                    .filter(function (item) { return typeof item.peso === 'number' && item.peso > 0; });
+                const ultimoPeso = comPeso.length ? comPeso[comPeso.length - 1].peso : null;
+                const geradoEm = new Date().toLocaleString('pt-BR');
+
+                const albumHTML = fotos.length
+                    ? fotos.map(function (item) {
+                        return (
+                            '<figure class="foto">' +
+                            '<img src="' + item.foto + '" alt="">' +
+                            '<figcaption>' +
+                            '<strong>' + escaparHTML(item.titulo) + '</strong>' +
+                            '<span>' + formatarData(item.data) + '</span>' +
+                            (item.descricao ? '<p>' + escaparHTML(item.descricao) + '</p>' : '') +
+                            '</figcaption>' +
+                            '</figure>'
+                        );
+                    }).join('')
+                    : '<p class="sem-fotos">Nenhuma foto registrada até o momento.</p>';
+
+                const registrosHTML = ordenados.map(function (item) {
+                    const meta = TIPOS[item.tipo] || TIPOS.anotacao;
+                    const peso = typeof item.peso === 'number' && item.peso > 0
+                        ? '<p class="peso">Peso: ' + formatarPeso(item.peso) + ' kg</p>'
+                        : '';
+                    const descricao = item.descricao
+                        ? '<p>' + escaparHTML(item.descricao).replace(/\n/g, '<br>') + '</p>'
+                        : '';
+                    const foto = item.foto
+                        ? '<img src="' + item.foto + '" alt="">'
+                        : '';
+
+                    return (
+                        '<article class="registro ' + meta.classe + '">' +
+                        '<div class="registro-topo">' +
+                        '<span class="registro-data">' + formatarData(item.data) + '</span>' +
+                        '<span class="registro-tipo">' + meta.rotulo + '</span>' +
+                        '</div>' +
+                        '<h3>' + escaparHTML(item.titulo) + '</h3>' +
+                        peso +
+                        descricao +
+                        foto +
+                        '</article>'
+                    );
+                }).join('');
+
+                const documento = '<!DOCTYPE html>' +
+                    '<html lang="pt-BR"><head><meta charset="UTF-8">' +
+                    '<title>Diário do Bebê - Maternis</title>' +
+                    '<style>' +
+                    '@page { size: A4; margin: 16mm; }' +
+                    '* { box-sizing: border-box; }' +
+                    'body { margin: 0; color: #3d2b36; font-family: "Poppins", "Segoe UI", Arial, sans-serif; }' +
+                    '.toolbar { position: sticky; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #f2c2d6; background: #fff0f5; }' +
+                    '.toolbar span { color: #7a5a68; font-size: 12px; }' +
+                    '.toolbar button { padding: 10px 18px; border: 0; border-radius: 999px; background: #d85b8b; color: #fff; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }' +
+                    'header { padding: 24px 0 8px; text-align: center; }' +
+                    'h1 { margin: 0 0 6px; color: #d85b8b; font-size: 28px; }' +
+                    '.sub { color: #7a5a68; font-size: 12px; }' +
+                    '.stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 18px 0 4px; }' +
+                    '.stat { padding: 9px 15px; border: 1px solid #f2c2d6; border-radius: 12px; background: #fff0f5; font-size: 11px; color: #7a5a68; }' +
+                    '.stat strong { display: block; color: #a83d69; font-size: 15px; }' +
+                    'h2 { margin: 26px 0 12px; padding-bottom: 6px; border-bottom: 2px solid #f7c9da; color: #a83d69; font-size: 18px; }' +
+                    '.album { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }' +
+                    '.foto { margin: 0; overflow: hidden; border: 1px solid #f2c2d6; border-radius: 12px; page-break-inside: avoid; }' +
+                    '.foto img { display: block; width: 100%; height: 150px; object-fit: cover; }' +
+                    '.foto figcaption { padding: 8px 10px; font-size: 11px; }' +
+                    '.foto figcaption strong { display: block; color: #a83d69; font-size: 12px; }' +
+                    '.foto figcaption span { color: #8a6a78; }' +
+                    '.foto figcaption p { margin: 4px 0 0; }' +
+                    '.sem-fotos { color: #8a6a78; font-size: 12px; }' +
+                    '.registro { margin-bottom: 10px; padding: 10px 14px; border-left: 4px solid #f48fb1; border-radius: 0 12px 12px 0; background: #fffafc; page-break-inside: avoid; }' +
+                    '.registro.tipo-foto { border-left-color: #d980fa; }' +
+                    '.registro.tipo-peso { border-left-color: #2ecc71; }' +
+                    '.registro.tipo-anotacao { border-left-color: #f39c12; }' +
+                    '.registro-topo { display: flex; justify-content: space-between; gap: 10px; color: #8a6a78; font-size: 10px; }' +
+                    '.registro-tipo { color: #a83d69; font-weight: 700; }' +
+                    '.registro h3 { margin: 4px 0 6px; color: #3d2b36; font-size: 14px; }' +
+                    '.registro p { margin: 4px 0; font-size: 12px; line-height: 1.5; }' +
+                    '.registro .peso { color: #2e8b57; font-weight: 700; }' +
+                    '.registro img { max-width: 100%; max-height: 220px; margin-top: 8px; border-radius: 8px; object-fit: cover; }' +
+                    'footer { margin-top: 28px; padding-top: 12px; border-top: 1px solid #f2c2d6; color: #8a6a78; font-size: 10px; text-align: center; }' +
+                    '@media print { .toolbar { display: none; } body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }' +
+                    '</style></head><body>' +
+                    '<div class="toolbar">' +
+                    '<span>Na janela de impressão, escolha <strong>Salvar como PDF</strong>.</span>' +
+                    '<button type="button" onclick="window.print()">Imprimir / Salvar PDF</button>' +
+                    '</div>' +
+                    '<header>' +
+                    '<h1>📖 Diário do Bebê</h1>' +
+                    '<div class="sub">Maternis • Resumo das recordações • Gerado em ' + escaparHTML(geradoEm) + '</div>' +
+                    '<div class="stats">' +
+                    '<div class="stat"><strong>' + registros.length + '</strong>Recordações</div>' +
+                    '<div class="stat"><strong>' + fotos.length + '</strong>Fotos</div>' +
+                    '<div class="stat"><strong>' + (ultimoPeso ? formatarPeso(ultimoPeso) + ' kg' : '—') + '</strong>Último peso</div>' +
+                    '</div>' +
+                    '</header>' +
+                    '<h2>Álbum de Fotos</h2>' +
+                    '<div class="album">' + albumHTML + '</div>' +
+                    '<h2>Linha do Tempo</h2>' +
+                    registrosHTML +
+                    '<footer>Feito com carinho no Maternis 💗</footer>' +
+                    '</body></html>';
+
+                janela.document.open();
+                janela.document.write(documento);
+                janela.document.close();
+                janela.focus();
+
+                setTimeout(function () {
+                    try {
+                        janela.print();
+                    } catch (erro) {
+                        // A janela continua aberta com o botão de impressão manual.
+                    }
+                }, 700);
+            }
+
+            /* =====================================================
+               INICIALIZAÇÃO
+               ===================================================== */
+            function iniciar() {
+                carregarRegistros();
+
+                const dataInput = document.getElementById('dataRegistro');
+                dataInput.value = hojeISO();
+                dataInput.max = hojeISO();
+
+                document.getElementById('tipoRegistro').addEventListener('change', aoMudarTipo);
+                document.getElementById('fotoRegistro').addEventListener('change', aoSelecionarFoto);
+                document.getElementById('formRegistro').addEventListener('submit', salvarRegistro);
+
+                document.getElementById('albumGrid').addEventListener('keydown', function (evento) {
+                    if ((evento.key === 'Enter' || evento.key === ' ') &&
+                        evento.target.classList.contains('album-card')) {
+                        evento.preventDefault();
+                        evento.target.click();
+                    }
+                });
+
+                aoMudarTipo();
+                renderizarTudo();
+            }
+
+            document.addEventListener('DOMContentLoaded', iniciar);
+
+            // Funções usadas pelos manipuladores onclick do HTML.
+            window.exportarDiarioPDF = exportarDiarioPDF;
+            window.irParaFormulario = irParaFormulario;
+            window.removerFotoSelecionada = removerFotoSelecionada;
+            window.limparFormulario = limparFormulario;
+            window.alternarOrdem = alternarOrdem;
+            window.abrirFoto = abrirFoto;
+            window.excluirRegistro = excluirRegistro;
+        })();
+    </script>
+
+</body>
+
+</html>

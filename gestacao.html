@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#F78FB3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Maternis">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script>(function(){try{var t=localStorage.getItem('maternis-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-bs-theme',t);}catch(e){}})();</script>
+    <title>Maternis - Gestação</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/maternis-theme.css">
+    <link rel="stylesheet" href="css/maternis-ui.css">
+    <link rel="stylesheet" href="css/valdenia.css">
+    <!-- SDK DO SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: #fff7fb;
+        }
+
+        .gestacao {
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #d85b8b;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: .2s;
+        }
+
+        .btn-voltar:hover {
+            color: #b94370;
+        }
+
+        .titulo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .titulo h1 {
+            color: #d85b8b;
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .titulo p {
+            color: #666;
+            font-size: 17px;
+        }
+
+        /* Progresso */
+        .progresso {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px #0002;
+            margin-bottom: 30px;
+        }
+
+        .progresso h2 {
+            color: #a83d69;
+            margin-bottom: 20px;
+        }
+
+        /* Configuração do Método de Cálculo */
+        .config-data {
+            background: #fff0f5;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .linha-metodo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .config-data label {
+            color: #a83d69;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .config-data select,
+        .config-data input {
+            padding: 8px 12px;
+            border: 1px solid #d85b8b;
+            border-radius: 8px;
+            outline: none;
+            background: white;
+            font-size: 14px;
+        }
+
+        .campos-dinamicos {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-salvar-gestacao {
+            align-self: flex-start;
+            background: #d85b8b;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: .3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-salvar-gestacao:hover {
+            background: #b94370;
+        }
+
+        .btn-salvar-gestacao:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .status-msg {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .semana h3 {
+            color: #d85b8b;
+            margin-bottom: 10px;
+        }
+
+        .semana p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .barra {
+            height: 18px;
+            background: #eee;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .preenchimento {
+            width: 0%;
+            height: 100%;
+            background: #e88bb0;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .info-semanas {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #666;
+            font-size: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px #0002;
+        }
+
+        .card span {
+            font-size: 45px;
+        }
+
+        .card h3 {
+            color: #d85b8b;
+            margin: 15px 0;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .card a {
+            background: #d85b8b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: .3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .card a:hover {
+            background: #b94370;
+        }
+        [data-theme="dark"] .progresso,
+        [data-theme="dark"] .card { background: var(--bg-surface) !important; color: var(--text-main) !important; }
+        [data-theme="dark"] .config-data { background: var(--bg-surface-alt) !important; }
+        [data-theme="dark"] .titulo p, [data-theme="dark"] .semana p, [data-theme="dark"] .card p, [data-theme="dark"] .info-semanas { color: var(--text-muted) !important; }
+        [data-theme="dark"] .barra { background: var(--bg-surface-alt) !important; }
+    </style>
+</head>
+
+<body>
+
+    <section class="gestacao">
+
+        <a href="menu.html" class="btn-voltar">
+            <i class="fa-solid fa-arrow-left"></i> Voltar ao menu
+        </a>
+
+        <div class="titulo">
+            <h1>🤰 Minha Gestação</h1>
+            <p>Acompanhe cada fase da gravidez e o desenvolvimento do bebê.</p>
+        </div>
+
+        <div class="progresso">
+            <h2>Progresso da gestação</h2>
+
+            <div class="config-data">
+                <div class="linha-metodo">
+                    <label for="metodoCalculo">Calcular progresso por:</label>
+                    <select id="metodoCalculo" onchange="alternarCampos()">
+                        <option value="dum">Data da Última Menstruação (DUM)</option>
+                        <option value="ultrassom">Semanas informadas no Ultrassom</option>
+                    </select>
+                </div>
+
+                <!-- Campo DUM -->
+                <div id="campoDUM" class="campos-dinamicos">
+                    <label for="dumInput">Data da DUM:</label>
+                    <input type="date" id="dumInput" onchange="calcularGestacao()">
+                </div>
+
+                <!-- Campo Ultrassom -->
+                <div id="campoUltrassom" class="campos-dinamicos" style="display: none;">
+                    <label for="semanasUS">Semanas no dia do exame:</label>
+                    <input type="number" id="semanasUS" min="1" max="42" placeholder="Ex: 8" onchange="calcularGestacao()" style="width: 80px;">
+                    
+                    <label for="dataUS">Data do exame:</label>
+                    <input type="date" id="dataUS" onchange="calcularGestacao()">
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn-salvar-gestacao" id="btnSalvarGestacao" onclick="salvarDadosSupabase()">
+                        <i class="fa-solid fa-floppy-disk"></i> Salvar dados
+                    </button>
+                    <span id="statusSalvar" class="status-msg"></span>
+                </div>
+            </div>
+
+            <!-- Exibição do Progresso -->
+            <div class="semana">
+                <h3 id="semanaTexto">Semana 0</h3>
+                <p id="trimestreTexto">Informe a data para calcular.</p>
+
+                <div class="barra">
+                    <div class="preenchimento" id="barraProgresso"></div>
+                </div>
+
+                <div class="info-semanas">
+                    <span id="semanasContador">0 de até 42 semanas</span>
+                    <span id="previsaoParto">Parto previsto entre 37 e 42 semanas</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <span>👶</span>
+                <h3>Informações do bebê</h3>
+                <p>Veja as informações do seu bebê</p>
+                <a href="bebe.html">Ver detalhes</a>
+            </div>
+
+            <div class="card">
+                <span>🩺</span>
+                <h3>Consultas e exames</h3>
+                <p>Organize consultas do pré-natal, exames e acompanhamentos médicos.</p>
+                <a href="consultas.html">Ver consultas</a>
+            </div>
+
+            <div class="card">
+                <span>🥗</span>
+                <h3>Cuidados na gestação</h3>
+                <p>Confira dicas de alimentação, saúde e bem-estar durante a gravidez.</p>
+                <a href="dicas.html">Ver cuidados</a>
+            </div>
+
+            <div class="card">
+                <span>📖</span>
+                <h3>Diário do Bebê</h3>
+                <p>Guarde fotos, marcos, pesos e recordações de cada fase do bebê.</p>
+                <a href="diario.html">Abrir Diário</a>
+            </div>
+        </div>
+
+    </section>
+
+    <script>
+        const SUPABASE_URL = "https://llktarpnobeigwgxfwwz.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_OKqhjXKeDyuon0S05JJX-g_zvIl-Kk1";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let usuarioAtual = null;
+
+        function alternarCampos() {
+            const metodo = document.getElementById("metodoCalculo").value;
+            document.getElementById("campoDUM").style.display = metodo === "dum" ? "flex" : "none";
+            document.getElementById("campoUltrassom").style.display = metodo === "ultrassom" ? "flex" : "none";
+            calcularGestacao();
+        }
+
+        function calcularGestacao() {
+            const metodo = document.getElementById("metodoCalculo").value;
+            let semanasTotais = 0;
+            let diasRestantes = 0;
+
+            if (metodo === "dum") {
+                const dumValor = document.getElementById("dumInput").value;
+                if (!dumValor) return;
+
+                const inicio = new Date(dumValor + "T00:00:00");
+                const hoje = new Date();
+                const diffDias = Math.floor((hoje - inicio) / (1000 * 60 * 60 * 24));
+
+                if (diffDias < 0) return;
+                semanasTotais = Math.floor(diffDias / 7);
+                diasRestantes = diffDias % 7;
+            } else {
+                const semanasInformadas = parseInt(document.getElementById("semanasUS").value);
+                const dataExameValor = document.getElementById("dataUS").value;
+
+                if (!semanasInformadas || !dataExameValor) return;
+
+                const dataExame = new Date(dataExameValor + "T00:00:00");
+                const hoje = new Date();
+                const diffDiasExame = Math.floor((hoje - dataExame) / (1000 * 60 * 60 * 24));
+
+                const diasIniciais = (semanasInformadas * 7) + diffDiasExame;
+                if (diasIniciais < 0) return;
+
+                semanasTotais = Math.floor(diasIniciais / 7);
+                diasRestantes = diasIniciais % 7;
+            }
+
+            atualizarInterface(semanasTotais, diasRestantes);
+        }
+
+        function atualizarInterface(semanas, dias) {
+            const maxSemanasRef = 42;
+            const porcentagem = Math.min(Math.round((semanas / maxSemanasRef) * 100), 100);
+
+            let trimestre = "";
+            if (semanas < 13) {
+                trimestre = "Você está no primeiro trimestre da gestação.";
+            } else if (semanas < 27) {
+                trimestre = "Você está no segundo trimestre da gestação.";
+            } else {
+                trimestre = "Você está no terceiro trimestre da gestação.";
+            }
+
+            document.getElementById("semanaTexto").innerText = `Semana ${semanas}` + (dias > 0 ? ` + ${dias} dias` : "");
+            document.getElementById("trimestreTexto").innerText = trimestre;
+            document.getElementById("semanasContador").innerText = `${semanas} de até 42 semanas`;
+            document.getElementById("barraProgresso").style.width = `${porcentagem}%`;
+        }
+
+        async function carregarDadosSupabase() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = "index.html";
+                return;
+            }
+            usuarioAtual = session.user;
+
+            const { data, error } = await supabaseClient
+                .from('gestacoes')
+                .select('*')
+                .eq('user_id', usuarioAtual.id)
+                .single();
+
+            if (data) {
+                document.getElementById("metodoCalculo").value = data.metodo || "dum";
+                document.getElementById("dumInput").value = data.dum || "";
+                document.getElementById("semanasUS").value = data.semanas_us || "";
+                document.getElementById("dataUS").value = data.data_us || "";
+                alternarCampos();
+            }
+        }
+
+        async function salvarDadosSupabase() {
+            if (!usuarioAtual) return;
+
+            const btn = document.getElementById("btnSalvarGestacao");
+            const status = document.getElementById("statusSalvar");
+            btn.disabled = true;
+            status.style.color = "#a83d69";
+            status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+
+            const payload = {
+                user_id: usuarioAtual.id,
+                metodo: document.getElementById("metodoCalculo").value,
+                dum: document.getElementById("dumInput").value || null,
+                semanas_us: document.getElementById("semanasUS").value ? parseInt(document.getElementById("semanasUS").value) : null,
+                data_us: document.getElementById("dataUS").value || null,
+                updated_at: new Date().toISOString()
+            };
+
+            try {
+                const { error } = await supabaseClient
+                    .from('gestacoes')
+                    .upsert(payload, { onConflict: 'user_id' });
+
+                if (error) throw error;
+
+                status.style.color = "green";
+                status.innerText = "✅ Dados salvos!";
+                calcularGestacao();
+            } catch (err) {
+                status.style.color = "red";
+                status.innerText = "❌ Erro: " + err.message;
+            } finally {
+                btn.disabled = false;
+                setTimeout(() => { status.innerText = ""; }, 4000);
+            }
+        }
+
+        window.onload = carregarDadosSupabase;
+    </script>
+    <script src="js/theme.js" defer></script>
+    <script src="js/valdenia.js" defer></script>
+
+    <script src="js/pwa.js" defer></script>
+</body>
+
+</html>

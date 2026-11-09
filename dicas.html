@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#F78FB3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Maternis">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script>(function(){try{var t=localStorage.getItem('maternis-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-bs-theme',t);}catch(e){}})();</script>
+    <title>Maternis - Dicas</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/maternis-theme.css">
+    <link rel="stylesheet" href="css/maternis-ui.css">
+    <link rel="stylesheet" href="css/valdenia.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        body {
+            background: #fff7fb;
+        }
+
+        .dicas {
+            max-width: 1100px;
+            margin: auto;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #d85b8b;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 25px;
+            transition: .2s;
+        }
+
+        .btn-voltar:hover {
+            color: #b94370;
+        }
+
+        .titulo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .titulo h1 {
+            color: #d85b8b;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .titulo p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Controles: Busca e Filtros */
+        .controles {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 35px;
+            align-items: center;
+        }
+
+        .busca-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .busca-container input {
+            width: 100%;
+            padding: 12px 15px 12px 42px;
+            border: 2px solid #f2c2d6;
+            border-radius: 25px;
+            outline: none;
+            font-size: 15px;
+            background: white;
+            transition: .3s;
+        }
+
+        .busca-container input:focus {
+            border-color: #d85b8b;
+        }
+
+        .busca-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #d85b8b;
+        }
+
+        .filtros {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filtro-btn {
+            background: white;
+            border: 1px solid #d85b8b;
+            color: #d85b8b;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: .3s;
+        }
+
+        .filtro-btn.ativo,
+        .filtro-btn:hover {
+            background: #d85b8b;
+            color: white;
+        }
+
+        /* Grid de Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+            transition: .3s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .12);
+        }
+
+        .topo-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .icone {
+            font-size: 38px;
+        }
+
+        .btn-fav {
+            background: none;
+            border: none;
+            color: #ddd;
+            font-size: 20px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-fav.ativo {
+            color: #e91e63;
+        }
+
+        .card h3 {
+            color: #d85b8b;
+            margin-bottom: 12px;
+            font-size: 20px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 14.5px;
+            flex-grow: 1;
+        }
+
+        .tag-categoria {
+            display: inline-block;
+            background: #fff0f5;
+            color: #a83d69;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+
+        .btn-ler-mais {
+            background: #d85b8b;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: .3s;
+            font-weight: bold;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn-ler-mais:hover {
+            background: #b94370;
+        }
+
+        /* Modal de Detalhes */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-conteudo {
+            background-color: white;
+            border-radius: 20px;
+            max-width: 550px;
+            width: 100%;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: surgir 0.3s ease;
+        }
+
+        @keyframes surgir {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .fechar-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 24px;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .fechar-modal:hover {
+            color: #444;
+        }
+
+        .modal-conteudo h2 {
+            color: #d85b8b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-corpo {
+            color: #555;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .modal-corpo ul {
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+
+        .modal-corpo li {
+            margin-bottom: 8px;
+        }
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .modal-conteudo { background: var(--bg-surface) !important; color: var(--text-main) !important; }
+        [data-theme="dark"] .card p,
+        [data-theme="dark"] .titulo p,
+        [data-theme="dark"] .modal-corpo { color: var(--text-muted) !important; }
+        [data-theme="dark"] .busca-container input { background: var(--input-bg) !important; color: var(--text-main) !important; border-color: var(--input-border) !important; }
+    </style>
+</head>
+
+<body>
+
+    <section class="dicas">
+
+        <a href="menu.html" class="btn-voltar">
+            <i class="fa-solid fa-arrow-left"></i> Voltar ao menu
+        </a>
+
+        <div class="titulo">
+            <h1>💡 Dicas para Mamães</h1>
+            <p>Pequenas orientações que fazem toda a diferença durante a gestação e nos primeiros meses do bebê.</p>
+        </div>
+
+        <div class="controles">
+            <!-- Barra de Pesquisa -->
+            <div class="busca-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="campoBusca" placeholder="Pesquisar por assunto..." oninput="filtrarCards()">
+            </div>
+
+            <!-- Botões de Categoria -->
+            <div class="filtros">
+                <button class="filtro-btn ativo" onclick="selecionarFiltro('todos', this)">Todas</button>
+                <button class="filtro-btn" onclick="selecionarFiltro('gestacao', this)">Gestação</button>
+                <button class="filtro-btn" onclick="selecionarFiltro('bebe', this)">Cuidados com o Bebê</button>
+                <button class="filtro-btn" onclick="selecionarFiltro('bem-estar', this)">Bem-Estar & Saúde</button>
+                <button class="filtro-btn" onclick="selecionarFiltro('favoritos', this)">⭐ Salvas</button>
+            </div>
+        </div>
+
+        <!-- Lista de Cards -->
+        <div class="cards" id="containerCards"></div>
+
+    </section>
+
+    <!-- Modal Informativo -->
+    <div id="modalDica" class="modal">
+        <div class="modal-conteudo">
+            <span class="fechar-modal" onclick="fecharModal()">&times;</span>
+            <h2 id="modalTitulo"></h2>
+            <div id="modalDescricao" class="modal-corpo"></div>
+        </div>
+    </div>
+
+    <script>
+        // Base de dados das dicas
+        const dadosDicas = [
+    {
+        id: 1,
+        icone: "🥗",
+        titulo: "Alimentação Saudável",
+        categoria: "bem-estar",
+        resumo: "Consuma frutas, verduras, proteínas magras e beba água regularmente para garantir nutrientes essenciais.",
+        detalhes: `
+            <p>Uma boa nutrição fortalece a imunidade da mãe e apoia o crescimento ideal dos tecidos e órgãos do bebé.</p>
+            <ul>
+                <li><strong>Ácido Fólico:</strong> Essencial no início, encontrado em folhas verdes escuras e leguminosas.</li>
+                <li><strong>Fracionamento:</strong> Comer porções menores com maior frequência ajuda a evitar enjoos e azia.</li>
+                <li><strong>Evite:</strong> Carnes e ovos mal passados, além de peixes ricos em mercúrio.</li>
+            </ul>
+        `
+    },
+    {
+        id: 2,
+        icone: "💧",
+        titulo: "Hidratação Adequada",
+        categoria: "bem-estar",
+        resumo: "Beber entre 2 e 3 litros de água por dia ajuda na circulação, evita inchaços e apoia o líquido amniótico.",
+        detalhes: `
+            <p>A água atua diretamente na renovação constante do líquido amniótico e reduz a retenção de líquidos que causa inchaço nos tornozelos e pernas.</p>
+            <ul>
+                <li>Mantenha uma garrafa sempre por perto para monitorizar a meta do dia.</li>
+                <li>Água de coco e chás liberados pelo obstetra são boas opções complementares.</li>
+            </ul>
+        `
+    },
+    {
+        id: 3,
+        icone: "😴",
+        titulo: "Sono e Posição",
+        categoria: "gestacao",
+        resumo: "Dormir virada para o lado esquerdo melhora o fluxo de sangue e oxigénio para o bebé e os órgãos da mãe.",
+        detalhes: `
+            <p>A posição melhora a passagem da veia cava inferior, reduzindo quedas de pressão e facilitando o trabalho renal da mãe.</p>
+            <ul>
+                <li>Coloque uma almofada entre os joelhos para aliviar o peso no quadril.</li>
+                <li>Evite dormir de barriga para cima a partir do segundo trimestre.</li>
+            </ul>
+        `
+    },
+    {
+        id: 4,
+        icone: "🚶",
+        titulo: "Atividades e Exercícios",
+        categoria: "gestacao",
+        resumo: "Caminhadas leves, hidroginástica e alongamentos regulares preparam a pelve e diminuem dores lombares.",
+        detalhes: `
+            <p>Exercícios de baixo impacto melhoram a circulação sanguínea, controlam a taxa de glicose e aumentam a disposição.</p>
+            <ul>
+                <li>Obtenha sempre o aval do seu obstetra antes de iniciar rotinas.</li>
+                <li>Pratique cerca de 20 a 30 minutos diários em passos confortáveis.</li>
+            </ul>
+        `
+    },
+    {
+        id: 5,
+        icone: "❤️",
+        titulo: "Saúde Emocional",
+        categoria: "bem-estar",
+        resumo: "Reserve momentos para desacelerar, expressar preocupações com familiares e proteger o seu descanso.",
+        detalhes: `
+            <p>Oscilações hormonais e a expectativa para a chegada do bebé podem causar episódios de ansiedade naturais na maternidade.</p>
+            <ul>
+                <li>Estabeleça uma rede de apoio confiável para dividir tarefas e dúvidas.</li>
+                <li>Não hesite em compartilhar seus sentimentos na consulta de pré-natal.</li>
+            </ul>
+        `
+    },
+    {
+        id: 6,
+        icone: "👶",
+        titulo: "A Chegada do Bebê",
+        categoria: "bebe",
+        resumo: "Monte a bolsa de maternidade por volta da 34ª semana e prepare os itens básicos do quarto e higienização.",
+        detalhes: `
+            <p>Deixar a mala de maternidade adiantada previne imprevistos caso o trabalho de parto inicie antes da 40ª semana.</p>
+            <ul>
+                <li>Separe 3 a 4 trocas completas de roupa em saquinhos identificados.</li>
+                <li>Leve seus documentos pessoais, carteira de pré-natal e exames recentes.</li>
+            </ul>
+        `
+    },
+    {
+        id: 7,
+        icone: "🤱",
+        titulo: "Pega Correta na Amamentação",
+        categoria: "bebe",
+        resumo: "Ajustar a boca do recém-nascido na aréola previne fissuras mamárias e garante que o bebé mame de forma eficiente.",
+        detalhes: `
+            <p>Amamentar não deve doer. O posicionamento correto é essencial logo nas primeiras horas de vida:</p>
+            <ul>
+                <li><strong>Boca aberta:</strong> A boca do bebé deve abranger quase toda a aréola inferior, e não apenas o mamilo.</li>
+                <li><strong>Lábios e queixo:</strong> Os lábios devem ficar virados para fora (formato "peixinho") e o queixo encostado na mama.</li>
+                <li><strong>Barriga com barriga:</strong> O corpo do bebé deve estar virado em direção ao da mãe.</li>
+            </ul>
+        `
+    },
+    {
+        id: 8,
+        icone: "⚠️",
+        titulo: "Sinais de Alerta na Gestação",
+        categoria: "gestacao",
+        resumo: "Reconheça sintomas atípicos que exigem avaliação médica imediata no pronto-atendimento obstétrico.",
+        detalhes: `
+            <p>Alguns sintomas não devem ser ignorados durante nenhuma fase da gravidez:</p>
+            <ul>
+                <li>Sangramento vaginal de qualquer intensidade ou perda de líquido transparente súbita.</li>
+                <li>Dor de cabeça persistente acompanhada de visão turva ou pontos brilhantes (pode indicar elevação de pressão).</li>
+                <li>Redução acentuada dos movimentos do bebé após a 28ª semana.</li>
+                <li>Dores abdominais fortes ou febre sem motivo aparente.</li>
+            </ul>
+        `
+    },
+    {
+        id: 9,
+        icone: "🛁",
+        titulo: "Cuidados com o Cordão e Banho",
+        categoria: "bebe",
+        resumo: "Dicas de temperatura da água e limpeza do coto umbilical com álcool 70% nos primeiros dias.",
+        detalhes: `
+            <p>A higienização correta do coto umbilical evita infeções e acelera a sua queda natural (que ocorre entre 7 e 15 dias):</p>
+            <ul>
+                <li><strong>Limpeza:</strong> Use haste de algodão com álcool 70% na base do coto a cada troca de fralda e após o banho.</li>
+                <li><strong>Sem coberturas:</strong> Mantenha o coto para fora da fralda, limpo e seco. Não aplique faixas ou pós.</li>
+                <li><strong>Temperatura do banho:</strong> A água deve estar morna, entre 36°C e 37°C (teste com a parte interna do antebraço).</li>
+            </ul>
+        `
+    },
+    {
+        id: 10,
+        icone: "💨",
+        titulo: "Alívio de Cólicas e Gases",
+        categoria: "bebe",
+        resumo: "Técnicas posturais e massagens suaves para aliviar o desconforto intestinal do recém-nascido.",
+        detalhes: `
+            <p>O sistema digestivo do bebé ainda está em maturação nos primeiros 3 meses de vida:</p>
+            <ul>
+                <li><strong>Movimento bicicleta:</strong> Deite o bebé de costas e movimente suavemente as perninhas dobradas contra a barriguinha.</li>
+                <li><strong>Massagem circular:</strong> Faça movimentos suaves em sentido horário ao redor do umbigo.</li>
+                <li><strong>Contato pele a pele:</strong> O calor do peito ou da barriga dos pais ajuda a relaxar a musculatura intestinal.</li>
+            </ul>
+        `
+    },
+    {
+        id: 11,
+        icone: "💉",
+        titulo: "Vacinação na Gravidez",
+        categoria: "gestacao",
+        resumo: "Conheça as vacinas prioritárias que transferem anticorpos da mãe diretamente para o feto.",
+        detalhes: `
+            <p>A imunização materna protege o bebé nos primeiros meses de vida através da placenta:</p>
+            <ul>
+                <li><strong>dTpa (Tríplice bacteriana acelular):</strong> Deve ser tomada a cada gestação (a partir da 20ª semana) contra tétano, difteria e coqueluche.</li>
+                <li><strong>Hepatite B:</strong> Para gestantes não vacinadas previamente.</li>
+                <li><strong>Influenza (Gripe):</strong> Dose única indicada em qualquer trimestre da gravidez.</li>
+            </ul>
+        `
+    },
+    {
+        id: 12,
+        icone: "🧘‍♀️",
+        titulo: "Rede de Apoio no Pós-Parto",
+        categoria: "bem-estar",
+        resumo: "Delegar tarefas domésticas no puerpério é essencial para focar na recuperação física e no vínculo com o recém-nascido.",
+        detalhes: `
+            <p>O puerpério traz adaptações hormonais e cansaço físico intenso decorrente do ciclo de mamadas:</p>
+            <ul>
+                <li>Divida as tarefas da casa (comida, compras e limpeza) com familiares, parceiro ou amigos próximos.</li>
+                <li>Limite visitas nos primeiros 15 a 30 dias para não sobrecarregar a rotina de adaptação.</li>
+                <li>Descanse sempre que o bebé adormecer, mesmo que em períodos curtos.</li>
+            </ul>
+        `
+    }
+];
+
+        let filtroAtual = 'todos';
+        let favoritos = JSON.parse(localStorage.getItem('maternis_dicas_favs')) || [];
+
+        function renderizarCards() {
+            const container = document.getElementById('containerCards');
+            const termoBusca = document.getElementById('campoBusca').value.toLowerCase();
+            container.innerHTML = '';
+
+            const dicasFiltradas = dadosDicas.filter(dica => {
+                const combinaBusca = dica.titulo.toLowerCase().includes(termoBusca) || 
+                                     dica.resumo.toLowerCase().includes(termoBusca);
+                
+                if (!combinaBusca) return false;
+
+                if (filtroAtual === 'todos') return true;
+                if (filtroAtual === 'favoritos') return favoritos.includes(dica.id);
+                return dica.categoria === filtroAtual;
+            });
+
+            if (dicasFiltradas.length === 0) {
+                container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #888; margin-top: 30px;">Nenhuma dica encontrada para este filtro.</p>`;
+                return;
+            }
+
+            dicasFiltradas.forEach(dica => {
+                const ehFavorito = favoritos.includes(dica.id);
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div>
+                        <div class="topo-card">
+                            <span class="icone">${dica.icone}</span>
+                            <button class="btn-fav ${ehFavorito ? 'ativo' : ''}" onclick="alternarFavorito(${dica.id})">
+                                <i class="${ehFavorito ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                            </button>
+                        </div>
+                        <span class="tag-categoria">${formatarCategoria(dica.categoria)}</span>
+                        <h3>${dica.titulo}</h3>
+                        <p>${dica.resumo}</p>
+                    </div>
+                    <button class="btn-ler-mais" onclick="abrirModal(${dica.id})">
+                        <i class="fa-solid fa-book-open"></i> Ver orientações
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function formatarCategoria(cat) {
+            if (cat === 'gestacao') return 'Gravidez';
+            if (cat === 'bebe') return 'Recém-nascido';
+            return 'Saúde & Cuidados';
+        }
+
+        function selecionarFiltro(categoria, botao) {
+            filtroAtual = categoria;
+            document.querySelectorAll('.filtro-btn').forEach(btn => btn.classList.remove('ativo'));
+            botao.classList.add('ativo');
+            renderizarCards();
+        }
+
+        function filtrarCards() {
+            renderizarCards();
+        }
+
+        function alternarFavorito(id) {
+            if (favoritos.includes(id)) {
+                favoritos = favoritos.filter(favId => favId !== id);
+            } else {
+                favoritos.push(id);
+            }
+            localStorage.setItem('maternis_dicas_favs', JSON.stringify(favoritos));
+            renderizarCards();
+        }
+
+        function abrirModal(id) {
+            const dica = dadosDicas.find(d => d.id === id);
+            if (!dica) return;
+
+            document.getElementById('modalTitulo').innerHTML = `${dica.icone} ${dica.titulo}`;
+            document.getElementById('modalDescricao').innerHTML = dica.detalhes;
+            document.getElementById('modalDica').style.display = 'flex';
+        }
+
+        function fecharModal() {
+            document.getElementById('modalDica').style.display = 'none';
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('modalDica');
+            if (event.target === modal) fecharModal();
+        };
+
+        renderizarCards();
+    </script>
+    <script src="js/theme.js" defer></script>
+    <script src="js/valdenia.js" defer></script>
+
+    <script src="js/pwa.js" defer></script>
+</body>
+
+</html>
