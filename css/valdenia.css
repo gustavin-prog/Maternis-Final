@@ -1,0 +1,544 @@
+/* Maternis - Assistente Valdênia
+   Botão flutuante, janela de chat e balões de mensagem. */
+
+:root {
+  --valdenia-pink: #f48fb1;
+  --valdenia-pink-strong: #d85b8b;
+  --valdenia-purple: #d980fa;
+  --valdenia-gradient: linear-gradient(135deg, #f78fb3, #d980fa);
+  --valdenia-glow: rgba(244, 143, 177, 0.55);
+  --valdenia-glow-soft: rgba(244, 143, 177, 0.26);
+  --valdenia-window-bg: #fffdfe;
+  --valdenia-messages-bg: #fff7fb;
+  --valdenia-bot-bg: #ffffff;
+  --valdenia-bot-border: rgba(216, 91, 139, 0.16);
+  --valdenia-text: #4a3a42;
+  --valdenia-text-soft: #8a737e;
+  --valdenia-input-bg: #ffffff;
+  --valdenia-input-border: rgba(216, 91, 139, 0.22);
+  --valdenia-shadow: 0 24px 60px rgba(216, 91, 139, 0.24), 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] {
+  --valdenia-window-bg: #241a28;
+  --valdenia-messages-bg: #1e1622;
+  --valdenia-bot-bg: #2e2233;
+  --valdenia-bot-border: rgba(247, 161, 190, 0.16);
+  --valdenia-text: #f3e9ef;
+  --valdenia-text-soft: #c3adba;
+  --valdenia-input-bg: #2a1f30;
+  --valdenia-input-border: rgba(247, 161, 190, 0.24);
+  --valdenia-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 36px rgba(217, 128, 250, 0.14);
+}
+
+/* =========================================================
+   RESETS DEFENSIVOS (evitam estilos globais das páginas)
+   ========================================================= */
+.valdenia-launcher,
+.valdenia-window,
+.valdenia-header,
+.valdenia-messages,
+.valdenia-suggestions,
+.valdenia-form,
+.valdenia-close,
+.valdenia-send,
+.valdenia-chip,
+.valdenia-input,
+.valdenia-bubble,
+.valdenia-msg {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: inherit;
+}
+
+.valdenia-launcher,
+.valdenia-close,
+.valdenia-send,
+.valdenia-chip {
+  margin: 0;
+  text-transform: none;
+}
+
+.valdenia-input {
+  width: auto;
+  max-width: 100%;
+}
+
+/* =========================================================
+   BOTÃO FLUTUANTE
+   ========================================================= */
+.valdenia-launcher {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1040;
+  width: 62px;
+  height: 62px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--valdenia-gradient);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(216, 91, 139, 0.38);
+  transition: all 0.3s ease;
+}
+
+.valdenia-launcher svg {
+  width: 27px;
+  height: 27px;
+  display: block;
+}
+
+.valdenia-launcher:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.3),
+    0 0 18px var(--valdenia-glow),
+    0 0 40px var(--valdenia-glow-soft),
+    0 12px 30px rgba(216, 91, 139, 0.42);
+}
+
+.valdenia-launcher:focus-visible {
+  outline: 2px solid var(--valdenia-pink);
+  outline-offset: 3px;
+}
+
+.valdenia-launcher.is-open {
+  transform: rotate(90deg) scale(0.94);
+}
+
+.valdenia-launcher.is-open:hover {
+  transform: rotate(90deg) scale(0.98);
+}
+
+/* =========================================================
+   JANELA DO CHAT
+   ========================================================= */
+.valdenia-window {
+  position: fixed;
+  right: 24px;
+  bottom: 100px;
+  z-index: 1045;
+  display: flex;
+  flex-direction: column;
+  width: 384px;
+  max-width: calc(100vw - 32px);
+  height: 552px;
+  max-height: calc(100vh - 132px);
+  overflow: hidden;
+  border: 1px solid var(--valdenia-bot-border);
+  border-radius: 26px;
+  background: var(--valdenia-window-bg);
+  box-shadow: var(--valdenia-shadow);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.97);
+  transform-origin: bottom right;
+  transition: opacity 0.28s ease, transform 0.28s ease, visibility 0.28s ease;
+}
+
+.valdenia-window.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* Cabeçalho */
+.valdenia-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  padding: 18px 18px 16px;
+  background: var(--valdenia-gradient);
+  color: #fff;
+}
+
+.valdenia-avatar {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.valdenia-header-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.valdenia-header-text h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.valdenia-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.valdenia-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #b8ffd0;
+  box-shadow: 0 0 8px rgba(184, 255, 208, 0.9);
+}
+
+.valdenia-close {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.valdenia-close:hover {
+  background: rgba(255, 255, 255, 0.32);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.55);
+}
+
+.valdenia-close svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+/* Área de mensagens */
+.valdenia-messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 16px 10px;
+  background: var(--valdenia-messages-bg);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(244, 143, 177, 0.5) transparent;
+}
+
+.valdenia-messages::-webkit-scrollbar {
+  width: 7px;
+}
+
+.valdenia-messages::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(244, 143, 177, 0.45);
+}
+
+.valdenia-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.valdenia-msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 14px;
+  animation: valdeniaFadeIn 0.25s ease both;
+}
+
+.valdenia-msg-user {
+  flex-direction: row-reverse;
+}
+
+.valdenia-msg-avatar {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--valdenia-gradient);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.valdenia-msg-user .valdenia-msg-avatar {
+  display: none;
+}
+
+.valdenia-bubble {
+  max-width: 82%;
+  padding: 11px 14px;
+  border: 1px solid var(--valdenia-bot-border);
+  border-radius: 18px 18px 18px 6px;
+  background: var(--valdenia-bot-bg);
+  color: var(--valdenia-text);
+  font-size: 0.86rem;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  box-shadow: 0 4px 14px rgba(216, 91, 139, 0.07);
+}
+
+.valdenia-bubble strong {
+  color: var(--valdenia-pink-strong);
+  font-weight: 700;
+}
+
+[data-theme="dark"] .valdenia-bubble strong {
+  color: #f7a1be;
+}
+
+.valdenia-msg-user .valdenia-bubble {
+  border: 0;
+  border-radius: 18px 18px 6px 18px;
+  background: var(--valdenia-gradient);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(216, 91, 139, 0.28);
+}
+
+.valdenia-msg-user .valdenia-bubble strong {
+  color: #fff;
+}
+
+/* Indicador de digitação */
+.valdenia-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 13px 16px;
+}
+
+.valdenia-typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--valdenia-pink);
+  animation: valdeniaBounce 1.1s infinite ease-in-out;
+}
+
+.valdenia-typing span:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.valdenia-typing span:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+/* Sugestões rápidas */
+.valdenia-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 16px 10px;
+  background: var(--valdenia-messages-bg);
+}
+
+.valdenia-chip {
+  padding: 6px 11px;
+  border: 1px solid var(--valdenia-input-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--valdenia-text-soft);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.valdenia-chip:hover {
+  border-color: var(--valdenia-pink);
+  background: rgba(244, 143, 177, 0.12);
+  color: var(--valdenia-pink-strong);
+  box-shadow: 0 0 14px var(--valdenia-glow-soft);
+}
+
+/* Formulário */
+.valdenia-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 12px 14px 14px;
+  border-top: 1px solid var(--valdenia-bot-border);
+  background: var(--valdenia-window-bg);
+}
+
+.valdenia-input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 15px;
+  border: 1px solid var(--valdenia-input-border);
+  border-radius: 999px;
+  background: var(--valdenia-input-bg);
+  color: var(--valdenia-text);
+  font: inherit;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.valdenia-input::placeholder {
+  color: var(--valdenia-text-soft);
+}
+
+.valdenia-input:focus {
+  border-color: var(--valdenia-pink);
+  box-shadow: 0 0 0 3px rgba(244, 143, 177, 0.18), 0 0 16px var(--valdenia-glow-soft);
+}
+
+.valdenia-send {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--valdenia-gradient);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(216, 91, 139, 0.32);
+  transition: all 0.3s ease;
+}
+
+.valdenia-send svg {
+  width: 19px;
+  height: 19px;
+  display: block;
+}
+
+.valdenia-send:hover {
+  transform: scale(1.06);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.28),
+    0 0 16px var(--valdenia-glow),
+    0 0 32px var(--valdenia-glow-soft);
+}
+
+.valdenia-send:focus-visible,
+.valdenia-chip:focus-visible,
+.valdenia-close:focus-visible {
+  outline: 2px solid var(--valdenia-pink);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   ANIMAÇÕES
+   ========================================================= */
+@keyframes valdeniaFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes valdeniaBounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  30% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   AJUSTE PARA PÁGINAS COM MENU INFERIOR FIXO
+   ========================================================= */
+body.has-bottom-nav .valdenia-launcher {
+  bottom: 88px;
+}
+
+body.has-bottom-nav .valdenia-window {
+  bottom: 164px;
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+@media (max-width: 480px) {
+  .valdenia-launcher {
+    right: 16px;
+    bottom: 16px;
+    width: 56px;
+    height: 56px;
+  }
+
+  .valdenia-launcher svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .valdenia-window {
+    right: 10px;
+    left: 10px;
+    bottom: 82px;
+    width: auto;
+    max-width: none;
+    height: calc(100vh - 100px);
+    max-height: 620px;
+    border-radius: 22px;
+  }
+
+  body.has-bottom-nav .valdenia-launcher {
+    bottom: 78px;
+  }
+
+  body.has-bottom-nav .valdenia-window {
+    bottom: 140px;
+    height: calc(100vh - 158px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .valdenia-launcher,
+  .valdenia-window,
+  .valdenia-close,
+  .valdenia-chip,
+  .valdenia-send,
+  .valdenia-input,
+  .valdenia-msg,
+  .valdenia-typing span {
+    transition: none !important;
+    animation: none !important;
+  }
+}

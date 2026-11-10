@@ -1,0 +1,395 @@
+/* Maternis - Sistema de Temas (Light/Dark)
+   Preserva a paleta original da marca e adiciona equivalentes harmoniosos para modo escuro. */
+
+:root {
+  color-scheme: light;
+
+  /* Marca (preservada) */
+  --maternis-pink: #f48fb1;
+  --maternis-pink-hover: #ec7ea5;
+  --maternis-pink-strong: #d85b8b;
+  --maternis-pink-strong-hover: #b94370;
+  --maternis-pink-deep: #a83d69;
+  --maternis-purple: #d980fa;
+  --maternis-purple-dark: #8e44ad;
+  --maternis-gradient: linear-gradient(135deg, #f78fb3, #d980fa);
+
+  /* Superfícies e texto (tema claro - padrões do Maternis) */
+  --bg-page: #fff8fb;
+  --bg-page-alt: #f8f4ff;
+  --bg-surface: #ffffff;
+  --bg-surface-alt: #fff0f5;
+  --bg-elevated: #ffffff;
+  --text-main: #444444;
+  --text-strong: #333333;
+  --text-muted: #666666;
+  --text-soft: #888888;
+  --text-on-accent: #ffffff;
+  --border-color: rgba(216, 91, 139, 0.18);
+  --border-strong: #f2c2d6;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --shadow-accent: rgba(217, 128, 250, 0.12);
+  --input-bg: #ffffff;
+  --input-border: #f2c2d6;
+  --overlay: rgba(0, 0, 0, 0.5);
+  --focus-ring: rgba(216, 91, 139, 0.18);
+
+  /* Transições globais de tema */
+  --theme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease,
+    box-shadow 0.3s ease, fill 0.3s ease, stroke 0.3s ease;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Marca preservada - tons levemente mais luminosos para contraste em fundo escuro */
+  --maternis-pink: #f7a1be;
+  --maternis-pink-hover: #f48fb1;
+  --maternis-pink-strong: #f08bb0;
+  --maternis-pink-strong-hover: #f5a3c2;
+  --maternis-pink-deep: #f2bfd4;
+  --maternis-purple: #e0a0fb;
+  --maternis-purple-dark: #c78cf2;
+
+  /* Superfícies escuras harmoniosas com a identidade rosada/roxa */
+  --bg-page: #17111a;
+  --bg-page-alt: #181320;
+  --bg-surface: #231a27;
+  --bg-surface-alt: #2d2133;
+  --bg-elevated: #2b2030;
+  --text-main: #f3edf5;
+  --text-strong: #fff7fb;
+  --text-muted: #d2c3d8;
+  --text-soft: #b39fbc;
+  --text-on-accent: #ffffff;
+  --border-color: rgba(247, 143, 179, 0.22);
+  --border-strong: rgba(247, 143, 179, 0.35);
+  --shadow-color: rgba(0, 0, 0, 0.35);
+  --shadow-accent: rgba(217, 128, 250, 0.18);
+  --input-bg: #1d1522;
+  --input-border: rgba(247, 143, 179, 0.3);
+  --overlay: rgba(0, 0, 0, 0.62);
+  --focus-ring: rgba(247, 161, 190, 0.28);
+}
+
+/* Aplicação base: em modo claro preserva o estilo original da página;
+   em modo escuro aplica as superfícies do tema. */
+html, body {
+  transition: var(--theme-transition);
+}
+
+[data-theme="dark"] body {
+  background-color: var(--bg-page) !important;
+  color: var(--text-main) !important;
+}
+
+/* Páginas com fundo lavanda no tema original preservam identidade no claro */
+[data-theme="dark"] body.theme-lavender,
+[data-theme="dark"].theme-lavender body {
+  background-color: var(--bg-page-alt) !important;
+}
+
+/* Botão de alternância de tema - canto superior esquerdo, fixo */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1030;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  background: var(--bg-surface);
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 18px var(--shadow-color);
+  transition: var(--theme-transition), transform 0.2s ease;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 0;
+  line-height: 1;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.theme-toggle .theme-icon {
+  font-size: 1.15rem;
+  pointer-events: none;
+}
+
+/* Overrides globais para modo escuro (componentes comuns) */
+[data-theme="dark"] .navbar,
+[data-theme="dark"] .card,
+[data-theme="dark"] .card-info,
+[data-theme="dark"] .menu-card,
+[data-theme="dark"] .card-custom,
+[data-theme="dark"] .card-ia,
+[data-theme="dark"] .progresso,
+[data-theme="dark"] .resumo,
+[data-theme="dark"] .card-editor,
+[data-theme="dark"] .item-relato,
+[data-theme="dark"] .consulta,
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .modal-conteudo,
+[data-theme="dark"] .bottom,
+[data-theme="dark"] .result-box,
+[data-theme="dark"] .dropdown-menu,
+[data-theme="dark"] .list-group-item {
+  background-color: var(--bg-surface) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-color) !important;
+  box-shadow: 0 8px 22px var(--shadow-color) !important;
+}
+
+[data-theme="dark"] .card-busca,
+[data-theme="dark"] .config-data,
+[data-theme="dark"] .aviso-banner,
+[data-theme="dark"] .alert-light,
+[data-theme="dark"] .bg-light,
+[data-theme="dark"] .bg-white {
+  background-color: var(--bg-surface-alt) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6,
+[data-theme="dark"] .titulo,
+[data-theme="dark"] .calendar-title,
+[data-theme="dark"] strong,
+[data-theme="dark"] label {
+  color: var(--text-strong) !important;
+}
+
+[data-theme="dark"] p,
+[data-theme="dark"] li,
+[data-theme="dark"] span,
+[data-theme="dark"] small,
+[data-theme="dark"] .text-muted,
+[data-theme="dark"] .text-secondary,
+[data-theme="dark"] .text-dark,
+[data-theme="dark"] .info,
+[data-theme="dark"] .subtitulo,
+[data-theme="dark"] .titulo p,
+[data-theme="dark"] .nav-link,
+[data-theme="dark"] .bottom a {
+  color: var(--text-muted) !important;
+}
+
+/* Preservar acentos da marca */
+[data-theme="dark"] .navbar-brand,
+[data-theme="dark"] .btn-voltar,
+[data-theme="dark"] .btn-voltar-topo,
+[data-theme="dark"] .nav-link:hover,
+[data-theme="dark"] .ativo,
+[data-theme="dark"] .bottom .ativo,
+[data-theme="dark"] .bottom .ativo i {
+  color: var(--maternis-pink) !important;
+}
+
+[data-theme="dark"] .hero h1 span {
+  color: var(--maternis-pink) !important;
+}
+
+[data-theme="dark"] .btn-pink,
+[data-theme="dark"] .btn-salvar,
+[data-theme="dark"] .btn-maternis,
+[data-theme="dark"] .btn-salvar-gestacao,
+[data-theme="dark"] .btn-ler-mais,
+[data-theme="dark"] .btn-ia,
+[data-theme="dark"] .card a,
+[data-theme="dark"] button.btn-salvar {
+  color: var(--text-on-accent) !important;
+}
+
+[data-theme="dark"] .btn-outline-pink {
+  border-color: var(--maternis-pink) !important;
+  color: var(--maternis-pink) !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .btn-outline-pink:hover {
+  background: var(--maternis-pink) !important;
+  color: #1a121d !important;
+}
+
+/* Formulários e inputs */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select,
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .input-group-text {
+  background-color: var(--input-bg) !important;
+  color: var(--text-main) !important;
+  border-color: var(--input-border) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: var(--text-soft) !important;
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+  border-color: var(--maternis-pink) !important;
+  box-shadow: 0 0 0 0.2rem var(--focus-ring) !important;
+}
+
+
+
+/* Tabelas, barras, divisores */
+[data-theme="dark"] hr {
+  border-color: var(--border-color) !important;
+  opacity: 1;
+}
+
+[data-theme="dark"] .barra,
+[data-theme="dark"] .progress {
+  background-color: var(--bg-surface-alt) !important;
+}
+
+/* Vacinas (calendário) */
+[data-theme="dark"] .calendar-day {
+  background: var(--bg-surface-alt) !important;
+  border-color: var(--border-color) !important;
+}
+[data-theme="dark"] .calendar-day.empty {
+  background: transparent !important;
+  border: none !important;
+}
+[data-theme="dark"] .calendar-day.today {
+  background: rgba(247, 143, 179, 0.12) !important;
+  border-color: var(--maternis-pink) !important;
+}
+[data-theme="dark"] .calendar-day-header,
+[data-theme="dark"] .day-number {
+  color: var(--text-muted) !important;
+}
+[data-theme="dark"] .badge-aplicada {
+  background-color: rgba(46, 204, 113, 0.18) !important;
+  color: #7ee2a8 !important;
+  border-color: rgba(46, 204, 113, 0.3) !important;
+}
+[data-theme="dark"] .badge-proxima {
+  background-color: rgba(217, 128, 250, 0.18) !important;
+  color: #e0a0fb !important;
+  border-color: rgba(217, 128, 250, 0.32) !important;
+}
+[data-theme="dark"] .badge-atrasada {
+  background-color: rgba(231, 76, 60, 0.18) !important;
+  color: #f5a3a3 !important;
+  border-color: rgba(231, 76, 60, 0.32) !important;
+}
+[data-theme="dark"] .status-pill.pendente { background: rgba(243, 156, 18, 0.2) !important; color: #ffd38a !important; }
+[data-theme="dark"] .status-pill.aplicada { background: rgba(46, 204, 113, 0.2) !important; color: #8fe3b0 !important; }
+[data-theme="dark"] .status-pill.atrasada { background: rgba(231, 76, 60, 0.2) !important; color: #f5a3a3 !important; }
+
+/* Consultas */
+[data-theme="dark"] .consulta-hoje {
+  background: rgba(217, 128, 250, 0.12) !important;
+}
+[data-theme="dark"] .consulta-proxima {
+  background: var(--bg-surface) !important;
+}
+
+/* Dicas */
+[data-theme="dark"] .filtro-btn {
+  background: var(--bg-surface) !important;
+  color: var(--maternis-pink) !important;
+  border-color: var(--maternis-pink) !important;
+}
+[data-theme="dark"] .filtro-btn.ativo,
+[data-theme="dark"] .filtro-btn:hover {
+  background: var(--maternis-pink-strong) !important;
+  color: #fff !important;
+}
+[data-theme="dark"] .tag-categoria {
+  background: rgba(247, 143, 179, 0.15) !important;
+  color: var(--maternis-pink-deep) !important;
+}
+[data-theme="dark"] .modal {
+  background-color: var(--overlay) !important;
+}
+
+/* Footer */
+[data-theme="dark"] footer {
+  box-shadow: inset 0 1px 0 var(--border-color);
+}
+
+/* Ajuste de legibilidade para títulos de seções que usam cores fixas */
+[data-theme="dark"] .progresso h2,
+[data-theme="dark"] .semana h3,
+[data-theme="dark"] .card h3,
+[data-theme="dark"] .card h4,
+[data-theme="dark"] .resumo h2,
+[data-theme="dark"] .historico-titulo,
+[data-theme="dark"] .modal-conteudo h2,
+[data-theme="dark"] .card-info h4,
+[data-theme="dark"] .titulo h1,
+[data-theme="dark"] .config-data label,
+[data-theme="dark"] label {
+  color: var(--maternis-pink) !important;
+}
+[data-theme="dark"] .info-semanas,
+[data-theme="dark"] .semana p,
+[data-theme="dark"] .card p,
+[data-theme="dark"] .card-info p,
+[data-theme="dark"] .hero p {
+  color: var(--text-muted) !important;
+}
+[data-theme="dark"] .hero h1 {
+  color: var(--text-strong) !important;
+}
+[data-theme="dark"] .topo p {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+[data-theme="dark"] .foto-preview {
+  background: var(--bg-surface-alt) !important;
+  border-color: var(--border-strong) !important;
+  color: var(--maternis-pink) !important;
+}
+
+/* Transições suaves em elementos interativos e superfícies */
+a, button, input, textarea, select, .card, .card-info, .menu-card, .consulta,
+.navbar, .bottom, .modal-content, .modal-conteudo, .calendar-day, .filtro-btn {
+  transition: var(--theme-transition);
+}
+
+@media (max-width: 576px) {
+  .theme-toggle {
+    top: 14px;
+    left: 14px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Respeita preferência de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  :root { --theme-transition: none; }
+  html, body, a, button, input, textarea, select, .card, .card-info, .menu-card,
+  .consulta, .navbar, .bottom, .modal-content, .modal-conteudo, .calendar-day,
+  .filtro-btn, .theme-toggle {
+    transition: none !important;
+    animation: none !important;
+  }
+}
