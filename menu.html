@@ -44,7 +44,7 @@
 
         body{
             background:#F8F4FF;
-            padding-bottom:110px;
+            padding-bottom:48px;
         }
 
         /* HEADER */
@@ -66,6 +66,16 @@
         .topo p{
             margin:0;
             opacity:.9;
+        }
+
+        /* Em telas estreitas a barra de pílulas ocupa uma linha própria,
+           então o cabeçalho ganha espaço extra no topo. */
+        @media (max-width:820px){
+
+            .topo{
+                padding-top:132px;
+            }
+
         }
 
         /* CARD IA */
@@ -179,121 +189,6 @@
 
         }
 
-        /* MENU INFERIOR */
-
-        .bottom{
-
-            position:fixed;
-            bottom:0;
-            left:0;
-            width:100%;
-            z-index:1030;
-            background:var(--bg-surface);
-            border-top:1px solid var(--border-color);
-            box-shadow:0 -8px 24px rgba(0,0,0,.08);
-            padding:8px 6px calc(8px + env(safe-area-inset-bottom));
-
-        }
-
-        .bottom-grid{
-
-            display:grid;
-            grid-template-columns:repeat(6, minmax(0, 1fr));
-            gap:2px;
-            max-width:720px;
-            margin:0 auto;
-
-        }
-
-        .bottom a{
-
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            justify-content:center;
-            gap:4px;
-            min-height:54px;
-            padding:4px 2px;
-            border-radius:14px;
-            color:var(--text-soft);
-            text-decoration:none;
-            font-size:10.5px;
-            font-weight:600;
-            line-height:1.15;
-            text-align:center;
-            transition:color .25s ease, background-color .25s ease, box-shadow .25s ease;
-
-        }
-
-        .bottom a i{
-
-            display:block;
-            font-size:21px;
-            line-height:1;
-
-        }
-
-        .bottom a span{
-
-            display:block;
-            max-width:100%;
-            word-break:break-word;
-
-        }
-
-        .bottom a:hover{
-
-            color:var(--maternis-pink-strong);
-            background:rgba(244,143,177,.12);
-
-        }
-
-        .bottom a.ativo{
-
-            color:var(--maternis-pink-strong);
-            background:rgba(244,143,177,.14);
-            box-shadow:0 0 0 1px rgba(244,143,177,.25), 0 0 16px rgba(244,143,177,.18);
-
-        }
-
-        [data-theme="dark"] .bottom{
-
-            background:var(--bg-surface) !important;
-            border-top-color:var(--border-color) !important;
-
-        }
-
-        [data-theme="dark"] .bottom a{
-
-            color:var(--text-soft) !important;
-
-        }
-
-        [data-theme="dark"] .bottom a:hover,
-        [data-theme="dark"] .bottom a.ativo{
-
-            color:var(--maternis-pink) !important;
-            background:rgba(247,161,190,.14);
-
-        }
-
-        @media (max-width:420px){
-
-            .bottom a{
-
-                min-height:50px;
-                font-size:9.5px;
-
-            }
-
-            .bottom a i{
-
-                font-size:19px;
-
-            }
-
-        }
-
         .banner-mae img{
             width:25%;
             max-width: 220px;
@@ -311,25 +206,63 @@
     </style>
 
 </head>
-<body class="theme-lavender has-bottom-nav">
+<body class="theme-lavender">
 
-<header class="maternis-pill-nav" aria-label="Navegação principal">
+<header class="maternis-pill-nav maternis-pill-nav--menu" aria-label="Navegação principal">
     <a class="pill-brand" href="index.html" aria-label="Maternis - Início">
         <span class="pill-brand-icon"><i class="fa-solid fa-heart"></i></span>
         <span class="pill-brand-text">Maternis</span>
     </a>
 
-    <nav class="pill-links" aria-label="Seções do site">
-        <a class="pill-link pill-link-home" href="index.html">Início</a>
-        <a class="pill-link active" href="menu.html">Menu</a>
-        <button class="pill-link" type="button" data-bs-toggle="modal" data-bs-target="#modalSobre">
-            Sobre
-        </button>
+    <nav class="pill-links" aria-label="Funcionalidades do Maternis">
+        <a class="pill-link pill-link-home" href="index.html" title="Início" aria-label="Início">
+            <i class="fa-solid fa-house"></i>
+            <span class="pill-label">Início</span>
+        </a>
+
+        <span class="pill-separator" aria-hidden="true"></span>
+
+        <a class="pill-link pill-link-feature" href="gestacao.html" title="Gestação" aria-label="Gestação">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span class="pill-label">Gestação</span>
+        </a>
+
+        <a class="pill-link pill-link-feature" href="bebe.html" title="Bebê" aria-label="Bebê">
+            <i class="fa-solid fa-baby"></i>
+            <span class="pill-label">Bebê</span>
+        </a>
+
+        <a class="pill-link pill-link-feature" href="vacinas.html" title="Vacinas" aria-label="Vacinas">
+            <i class="fa-solid fa-syringe"></i>
+            <span class="pill-label">Vacinas</span>
+        </a>
+
+        <a class="pill-link pill-link-feature" href="consultas.html" title="Consultas" aria-label="Consultas">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span class="pill-label">Consultas</span>
+        </a>
+
+        <a class="pill-link pill-link-feature" href="dicas.html" title="Dicas" aria-label="Dicas">
+            <i class="fa-solid fa-lightbulb"></i>
+            <span class="pill-label">Dicas</span>
+        </a>
+
+        <a class="pill-link pill-link-feature" href="diario.html" title="Diário do Bebê" aria-label="Diário do Bebê">
+            <i class="fa-solid fa-book-open"></i>
+            <span class="pill-label">Diário do Bebê</span>
+        </a>
     </nav>
 
     <div class="pill-actions">
-        <button class="pill-action pill-action-ghost" onclick="fazerLogout()">
-            <i class="bi bi-box-arrow-right"></i> Sair
+        <button class="pill-action pill-action-ghost" type="button" data-bs-toggle="modal" data-bs-target="#modalSobre"
+            title="Sobre o Maternis" aria-label="Sobre o Maternis">
+            <i class="fa-solid fa-circle-info"></i>
+            <span class="pill-label">Sobre</span>
+        </button>
+        <button class="pill-action pill-action-ghost" type="button" onclick="fazerLogout()" title="Sair da conta"
+            aria-label="Sair da conta">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span class="pill-label">Sair</span>
         </button>
     </div>
 </header>
@@ -431,35 +364,6 @@
 
 </div>
 
-<nav class="bottom" aria-label="Navegação rápida">
-    <div class="bottom-grid">
-        <a href="gestacao.html" title="Gestação">
-            <i class="bi bi-heart-pulse"></i>
-            <span>Gestação</span>
-        </a>
-        <a href="bebe.html" title="Bebê">
-            <i class="bi bi-emoji-smile"></i>
-            <span>Bebê</span>
-        </a>
-        <a href="vacinas.html" title="Vacinas">
-            <i class="bi bi-capsule"></i>
-            <span>Vacinas</span>
-        </a>
-        <a href="consultas.html" title="Consultas">
-            <i class="bi bi-calendar-check"></i>
-            <span>Consultas</span>
-        </a>
-        <a href="dicas.html" title="Dicas">
-            <i class="bi bi-book-half"></i>
-            <span>Dicas</span>
-        </a>
-        <a href="diario.html" title="Diário do Bebê">
-            <i class="bi bi-journal-album"></i>
-            <span>Diário do Bebê</span>
-        </a>
-    </div>
-</nav>
-
 <!-- MODAL SOBRE -->
 <div class="modal fade maternis-about-modal" id="modalSobre" tabindex="-1" aria-labelledby="modalSobreTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -514,6 +418,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/theme.js" defer></script>
+<script src="js/navegacao.js" defer></script>
 <script src="js/valdenia.js" defer></script>
 
 <script>

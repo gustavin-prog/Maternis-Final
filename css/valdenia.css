@@ -485,11 +485,11 @@
    AJUSTE PARA PÁGINAS COM MENU INFERIOR FIXO
    ========================================================= */
 body.has-bottom-nav .valdenia-launcher {
-  bottom: 88px;
+  bottom: 104px;
 }
 
 body.has-bottom-nav .valdenia-window {
-  bottom: 164px;
+  bottom: 180px;
 }
 
 /* =========================================================
@@ -520,12 +520,12 @@ body.has-bottom-nav .valdenia-window {
   }
 
   body.has-bottom-nav .valdenia-launcher {
-    bottom: 78px;
+    bottom: 94px;
   }
 
   body.has-bottom-nav .valdenia-window {
-    bottom: 140px;
-    height: calc(100vh - 158px);
+    bottom: 156px;
+    height: calc(100vh - 174px);
   }
 }
 

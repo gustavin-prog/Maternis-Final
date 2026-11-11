@@ -199,6 +199,58 @@
 }
 
 /* =========================================================
+   FUNCIONALIDADES EM PÍLULAS NO MENU SUPERIOR
+   ========================================================= */
+.pill-separator {
+  width: 1px;
+  height: 22px;
+  flex-shrink: 0;
+  margin: 0 4px;
+  background: linear-gradient(180deg, transparent, var(--pill-border), transparent);
+}
+
+.pill-link-feature {
+  position: relative;
+  overflow: hidden;
+}
+
+.pill-link-feature i {
+  color: var(--maternis-pink-strong);
+  font-size: 0.86rem;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+}
+
+.pill-link-feature::after {
+  content: "";
+  position: absolute;
+  right: 22%;
+  bottom: 5px;
+  left: 22%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--maternis-pink), transparent);
+  opacity: 0;
+  transform: scaleX(0.35);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.pill-link-feature:hover::after,
+.pill-link-feature:focus-visible::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.pill-link-feature:hover i,
+.pill-link-feature:focus-visible i {
+  color: var(--maternis-pink-strong);
+  transform: translateY(-2px) scale(1.12) rotate(-4deg);
+}
+
+.pill-link-feature:active {
+  transform: scale(0.97);
+}
+
+/* =========================================================
    MODAL "SOBRE" UNIFICADO
    ========================================================= */
 .maternis-about-modal .modal-content {
@@ -395,6 +447,129 @@ button:focus-visible,
 }
 
 /* =========================================================
+   MENU INFERIOR CONDICIONAL
+   Injetado por js/navegacao.js apenas nas seis funcionalidades.
+   ========================================================= */
+.maternis-bottom-nav {
+  position: fixed;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 1032;
+  display: none;
+  width: min(720px, calc(100vw - 24px));
+  padding: 8px;
+  border: 1px solid var(--pill-border);
+  border-radius: 999px;
+  background: var(--pill-bg);
+  box-shadow: var(--pill-shadow);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  transform: translateX(-50%);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.has-bottom-nav .maternis-bottom-nav {
+  display: block;
+  animation: maternisBottomNavIn 0.45s cubic-bezier(0.22, 0.9, 0.3, 1) both;
+}
+
+.maternis-bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.maternis-bottom-link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 52px;
+  padding: 7px 4px;
+  border-radius: 999px;
+  color: var(--pill-link-color);
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
+  text-decoration: none;
+  transition: color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.maternis-bottom-link i {
+  font-size: 19px;
+  line-height: 1;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.maternis-bottom-link span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.maternis-bottom-link:hover {
+  background: var(--pill-link-hover-bg);
+  color: var(--maternis-pink-strong);
+  transform: translateY(-2px);
+}
+
+.maternis-bottom-link:hover i {
+  transform: translateY(-2px) scale(1.08);
+}
+
+.maternis-bottom-link.is-active {
+  background: var(--pill-active-bg);
+  color: #fff;
+  box-shadow: var(--pill-active-shadow);
+}
+
+.maternis-bottom-link.is-active i {
+  color: #fff;
+}
+
+.maternis-bottom-link.is-active:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.28), 0 0 18px var(--led-pink),
+    0 0 34px var(--led-pink-soft);
+}
+
+body.has-bottom-nav {
+  padding-bottom: calc(104px + env(safe-area-inset-bottom));
+}
+
+@keyframes maternisBottomNavIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 18px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+[data-theme="dark"] .maternis-bottom-nav {
+  border-color: var(--pill-border);
+  background: var(--pill-bg);
+  box-shadow: var(--pill-shadow);
+}
+
+/* O tema escuro global colore todos os <span>; os rótulos das pílulas
+   precisam herdar a cor do próprio link para manter o contraste. */
+[data-theme="dark"] .pill-label,
+[data-theme="dark"] .maternis-bottom-link span {
+  color: inherit !important;
+}
+
+[data-theme="dark"] .maternis-bottom-link.is-active span {
+  color: #fff !important;
+}
+
+/* =========================================================
    RESPONSIVIDADE
    ========================================================= */
 @media (max-width: 760px) {
@@ -467,12 +642,110 @@ button:focus-visible,
   }
 }
 
+/* Ao ganhar as seis funcionalidades, o menu superior prioriza os ícones
+   antes de o texto começar a competir por espaço. */
+@media (max-width: 1180px) {
+  .maternis-pill-nav--menu .pill-link-feature {
+    padding: 8px 10px;
+  }
+
+  .maternis-pill-nav--menu .pill-link-feature .pill-label {
+    display: none;
+  }
+}
+
+/* Em telas estreitas o menu superior ocupa uma linha própria, abaixo do
+   botão de tema, e as funcionalidades podem rolar horizontalmente. */
+@media (max-width: 820px) {
+  .maternis-pill-nav--menu {
+    top: 62px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-width: none;
+    justify-content: center;
+    gap: 3px;
+    padding: 6px 8px;
+    transform: none;
+  }
+
+  .maternis-pill-nav--menu .pill-brand-text,
+  .maternis-pill-nav--menu .pill-label {
+    display: none;
+  }
+
+  .maternis-pill-nav--menu .pill-brand {
+    padding-right: 2px;
+  }
+
+  .maternis-pill-nav--menu .pill-links {
+    flex: 1 1 auto;
+    min-width: 0;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .maternis-pill-nav--menu .pill-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .maternis-pill-nav--menu .pill-link,
+  .maternis-pill-nav--menu .pill-action {
+    padding: 8px 10px;
+  }
+
+  .maternis-pill-nav--menu .pill-actions {
+    margin-left: 0;
+  }
+
+  .maternis-pill-nav--menu .pill-separator {
+    margin: 0 2px;
+  }
+}
+
+@media (max-width: 560px) {
+  .maternis-bottom-nav {
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    width: calc(100vw - 16px);
+    padding: 6px;
+    border-radius: 30px;
+  }
+
+  .maternis-bottom-grid {
+    gap: 2px;
+  }
+
+  .maternis-bottom-link {
+    min-height: 48px;
+    gap: 3px;
+    padding: 6px 2px;
+    font-size: 9px;
+  }
+
+  .maternis-bottom-link i {
+    font-size: 17px;
+  }
+
+  body.has-bottom-nav {
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .maternis-pill-nav,
   .pill-brand,
   .pill-brand-icon,
   .pill-link,
+  .pill-link-feature,
+  .pill-link-feature i,
   .pill-action,
+  .pill-separator,
+  .maternis-bottom-nav,
+  .maternis-bottom-link,
+  .maternis-bottom-link i,
   .creator-card,
   button,
   .btn,
