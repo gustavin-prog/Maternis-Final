@@ -75,7 +75,15 @@
 /* Aplicação base: em modo claro preserva o estilo original da página;
    em modo escuro aplica as superfícies do tema. */
 html, body {
+  max-width: 100%;
+  overflow-x: hidden;
   transition: var(--theme-transition);
+}
+
+/* Imagens nunca devem ultrapassar o container nem gerar rolagem lateral. */
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 [data-theme="dark"] body {
@@ -374,10 +382,70 @@ a, button, input, textarea, select, .card, .card-info, .menu-card, .consulta,
   transition: var(--theme-transition);
 }
 
+@media (max-width: 768px) {
+  /* 16px evita o zoom automático ao focar campos no iOS e no Android. */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea,
+  .form-control,
+  .form-select,
+  .valdenia-input {
+    font-size: 16px !important;
+    line-height: 1.4;
+  }
+
+  .container,
+  .container-fluid {
+    max-width: 100%;
+  }
+
+  /* Ajustes compartilhados das telas internas no celular. */
+  .gestacao,
+  .dicas {
+    padding: 24px 14px 104px;
+  }
+
+  .topo {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .topo h2 {
+    font-size: clamp(1.35rem, 5vw, 1.8rem);
+    line-height: 1.25;
+  }
+
+  .card-custom,
+  .progresso {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .titulo h1 {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .gestacao,
+  .dicas {
+    padding: 20px 12px 100px;
+  }
+
+  .card-custom,
+  .progresso {
+    padding: 16px 14px;
+  }
+
+  .titulo h1 {
+    font-size: 1.5rem;
+  }
+}
+
 @media (max-width: 576px) {
   .theme-toggle {
-    top: 14px;
-    left: 14px;
+    top: 12px;
+    left: 12px;
     width: 40px;
     height: 40px;
   }

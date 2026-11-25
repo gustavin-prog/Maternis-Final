@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#F78FB3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Maternis">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script>(function(){try{var t=localStorage.getItem('maternis-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-bs-theme',t);}catch(e){}})();</script>
+
+    <title>Sobre • Maternis</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/maternis-theme.css">
+    <link rel="stylesheet" href="css/maternis-ui.css">
+    <link rel="stylesheet" href="css/maternis-public.css">
+
+    <!-- SDK DO SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="public-body">
+
+<header class="maternis-pill-nav" aria-label="Navegação principal">
+    <a class="pill-brand" href="index.html" aria-label="Maternis - Início">
+        <span class="pill-brand-icon"><i class="fa-solid fa-heart"></i></span>
+        <span class="pill-brand-text">Maternis</span>
+    </a>
+
+    <nav class="pill-links" aria-label="Seções do site">
+        <a class="pill-link" href="index.html">Início</a>
+        <a class="pill-link" href="recursos.html">Recursos</a>
+        <a class="pill-link active" href="sobre.html" aria-current="page">Sobre</a>
+    </nav>
+
+    <div class="pill-actions" id="areaUsuarioHome">
+        <a class="pill-action pill-action-ghost" href="cadastrar.html">
+            <i class="fa-solid fa-user-plus"></i> Cadastrar
+        </a>
+        <a class="pill-action pill-action-primary" href="entrar.html">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar
+        </a>
+    </div>
+</header>
+
+<main class="public-main">
+    <section class="public-hero">
+        <div class="container text-center">
+            <span class="public-eyebrow"><i class="fa-solid fa-heart"></i> Sobre o Maternis</span>
+            <h1 class="public-title">Um espaço criado para <span>acolher e acompanhar mães.</span></h1>
+            <p class="public-lead">
+                O Maternis nasceu para centralizar o cuidado materno em uma experiência simples, segura e
+                afetuosa — reunindo informação, organização e ferramentas que caminham junto com cada fase
+                da gestação e dos primeiros anos do bebê.
+            </p>
+        </div>
+    </section>
+
+    <section class="public-section">
+        <div class="container">
+            <div class="about-story-grid">
+                <article class="about-story">
+                    <h2>Nosso propósito</h2>
+                    <p>
+                        O Maternis é um <strong>centralizador de cuidado materno</strong> criado para acompanhar
+                        mães de primeira viagem desde a gestação até os primeiros anos do bebê. Reunimos, em um
+                        só lugar, informações de saúde, lembretes de consultas e vacinas, orientações práticas e
+                        ferramentas para registrar cada fase dessa jornada.
+                    </p>
+                    <p>
+                        Nosso propósito é tornar a rotina mais leve, segura e organizada — para que a mãe possa
+                        cuidar de si e do bebê com mais confiança, sem perder nenhum momento importante.
+                    </p>
+                </article>
+
+                <aside class="about-note">
+                    <h2>O que você encontra aqui</h2>
+                    <ul>
+                        <li><i class="fa-solid fa-heart-pulse"></i> Acompanhamento da gestação semana a semana.</li>
+                        <li><i class="fa-solid fa-syringe"></i> Controle do calendário de vacinas.</li>
+                        <li><i class="fa-solid fa-calendar-check"></i> Organização de consultas e exames.</li>
+                        <li><i class="fa-solid fa-book-open"></i> Diário para guardar cada lembrança.</li>
+                        <li><i class="fa-solid fa-comments"></i> Apoio da assistente virtual ValdênIA.</li>
+                    </ul>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section class="public-section">
+        <div class="container">
+            <div class="public-section-head">
+                <h2>O que guia o nosso cuidado</h2>
+                <p>Tecnologia com sensibilidade, informação com responsabilidade e acolhimento em cada detalhe.</p>
+            </div>
+
+            <div class="values-grid">
+                <article class="value-card">
+                    <i class="fa-solid fa-shield-heart"></i>
+                    <h3>Segurança</h3>
+                    <p>Conteúdos e ferramentas pensados para apoiar decisões mais tranquilas ao longo da maternidade.</p>
+                </article>
+
+                <article class="value-card">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                    <h3>Acolhimento</h3>
+                    <p>Uma experiência visual leve, humana e respeitosa com a rotina e os sentimentos de cada mãe.</p>
+                </article>
+
+                <article class="value-card">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <h3>Praticidade</h3>
+                    <p>Tudo o que importa reunido em um só lugar, com navegação simples também no celular.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="public-section">
+        <div class="container">
+            <div class="public-section-head">
+                <h2>Criadores do projeto</h2>
+                <p>Este projeto foi idealizado e desenvolvido com dedicação por três estudantes.</p>
+            </div>
+
+            <div class="team-grid">
+                <article class="team-card">
+                    <div class="team-avatar">FG</div>
+                    <strong>Flávio Gustavo</strong>
+                    <span>Desenvolvedor</span>
+                </article>
+
+                <article class="team-card">
+                    <div class="team-avatar">DM</div>
+                    <strong>Daniel Melo</strong>
+                    <span>Desenvolvedor</span>
+                </article>
+
+                <article class="team-card">
+                    <div class="team-avatar">JV</div>
+                    <strong>João Vitor</strong>
+                    <span>Desenvolvedor</span>
+                </article>
+            </div>
+
+            <p class="about-footer-note">Feito com carinho para acompanhar cada fase da maternidade. 💗</p>
+        </div>
+    </section>
+
+    <section class="public-section">
+        <div class="container">
+            <div class="public-cta">
+                <h2>Conheça tudo o que o Maternis pode fazer por você</h2>
+                <p>Veja as funcionalidades disponíveis e comece a organizar sua jornada materna com mais tranquilidade.</p>
+                <div class="public-cta-actions">
+                    <a href="recursos.html" class="btn-pink">Ver recursos</a>
+                    <a href="cadastrar.html" class="btn-outline-pink">Criar minha conta</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="public-footer">
+    © 2026 Maternis • Daniel Melo, Flávio Gustavo, João Vitor.
+</footer>
+
+<script src="js/theme.js" defer></script>
+<script src="js/public-nav.js" defer></script>
+<script src="js/pwa.js" defer></script>
+</body>
+</html>

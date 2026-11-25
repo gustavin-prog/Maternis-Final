@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#F78FB3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Maternis">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script>(function(){try{var t=localStorage.getItem('maternis-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-bs-theme',t);}catch(e){}})();</script>
+
+    <title>Recursos • Maternis</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/maternis-theme.css">
+    <link rel="stylesheet" href="css/maternis-ui.css">
+    <link rel="stylesheet" href="css/maternis-public.css">
+
+    <!-- SDK DO SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="public-body">
+
+<header class="maternis-pill-nav" aria-label="Navegação principal">
+    <a class="pill-brand" href="index.html" aria-label="Maternis - Início">
+        <span class="pill-brand-icon"><i class="fa-solid fa-heart"></i></span>
+        <span class="pill-brand-text">Maternis</span>
+    </a>
+
+    <nav class="pill-links" aria-label="Seções do site">
+        <a class="pill-link" href="index.html">Início</a>
+        <a class="pill-link active" href="recursos.html" aria-current="page">Recursos</a>
+        <a class="pill-link" href="sobre.html">Sobre</a>
+    </nav>
+
+    <div class="pill-actions" id="areaUsuarioHome">
+        <a class="pill-action pill-action-ghost" href="cadastrar.html">
+            <i class="fa-solid fa-user-plus"></i> Cadastrar
+        </a>
+        <a class="pill-action pill-action-primary" href="entrar.html">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar
+        </a>
+    </div>
+</header>
+
+<main class="public-main">
+    <section class="public-hero">
+        <div class="container text-center">
+            <span class="public-eyebrow"><i class="fa-solid fa-heart"></i> Recursos Maternis</span>
+            <h1 class="public-title">Cuidado, organização e acolhimento para <span>cada fase da maternidade.</span></h1>
+            <p class="public-lead">
+                Do primeiro teste de gravidez aos primeiros passos do bebê, o Maternis reúne ferramentas
+                simples e acolhedoras para ajudar você a acompanhar a gestação, os exames, as vacinas e
+                cada descoberta — sem perder nenhum momento especial.
+            </p>
+
+            <div class="public-hero-actions">
+                <a href="cadastrar.html" class="btn-pink">
+                    <i class="fa-solid fa-user-plus me-2"></i> Criar minha conta
+                </a>
+                <a href="entrar.html" class="btn-outline-pink">
+                    Já tenho conta
+                </a>
+            </div>
+
+            <div class="public-badges" aria-label="Destaques dos recursos">
+                <span class="public-badge"><i class="fa-solid fa-clock"></i> Acompanhamento contínuo</span>
+                <span class="public-badge"><i class="fa-solid fa-shield-heart"></i> Informação segura</span>
+                <span class="public-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> Assistente ValdênIA</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="public-section" aria-labelledby="tituloFuncionalidades">
+        <div class="container">
+            <div class="public-section-head">
+                <h2 id="tituloFuncionalidades">Tudo o que você encontra dentro do Maternis</h2>
+                <p>Funcionalidades pensadas para deixar a rotina mais leve e o cuidado mais próximo.</p>
+            </div>
+
+            <div class="resource-grid">
+                <a class="resource-card" href="gestacao.html">
+                    <span class="resource-icon"><i class="fa-solid fa-heart-pulse"></i></span>
+                    <h3>Gestação</h3>
+                    <p>Acompanhamento semana a semana da gravidez e orientações maternas para viver cada etapa com mais segurança.</p>
+                    <div class="resource-tags">
+                        <span class="resource-tag">Semana a semana</span>
+                        <span class="resource-tag">Orientações</span>
+                    </div>
+                    <span class="resource-link">Abrir gestação <i class="fa-solid fa-arrow-right"></i></span>
+                </a>
+
+                <a class="resource-card" href="diario.html">
+                    <span class="resource-icon"><i class="fa-solid fa-book-open"></i></span>
+                    <h3>Diário do Bebê</h3>
+                    <p>Registro de momentos especiais, linha do tempo, álbum de fotos e exportação em PDF para guardar as lembranças.</p>
+                    <div class="resource-tags">
+                        <span class="resource-tag">Linha do tempo</span>
+                        <span class="resource-tag">Álbum</span>
+                        <span class="resource-tag">PDF</span>
+                    </div>
+                    <span class="resource-link">Abrir diário <i class="fa-solid fa-arrow-right"></i></span>
+                </a>
+
+                <a class="resource-card" href="bebe.html">
+                    <span class="resource-icon"><i class="fa-solid fa-baby"></i></span>
+                    <h3>Bebê</h3>
+                    <p>Monitoramento do crescimento e marcos de desenvolvimento infantil em uma visão clara e afetuosa.</p>
+                    <div class="resource-tags">
+                        <span class="resource-tag">Crescimento</span>
+                        <span class="resource-tag">Marcos</span>
+                    </div>
+                    <span class="resource-link">Abrir acompanhamento <i class="fa-solid fa-arrow-right"></i></span>
+                </a>
+
+                <a class="resource-card" href="vacinas.html">
+                    <span class="resource-icon"><i class="fa-solid fa-syringe"></i></span>
+                    <h3>Calendário de Vacinas</h3>
+                    <p>Controle de imunização infantil com datas, projeções e status de cada dose do calendário.</p>
+                    <div class="resource-tags">
+                        <span class="resource-tag">PNI / SUS</span>
+                        <span class="resource-tag">Doses</span>
+                        <span class="resource-tag">Lembretes</span>
+                    </div>
+                    <span class="resource-link">Abrir vacinas <i class="fa-solid fa-arrow-right"></i></span>
+                </a>
+
+                <a class="resource-card" href="consultas.html">
+                    <span class="resource-icon"><i class="fa-solid fa-calendar-check"></i></span>
+                    <h3>Consultas</h3>
+                    <p>Organização de consultas pré-natais e pediátricas, com histórico e próximos atendimentos em um só lugar.</p>
+                    <div class="resource-tags">
+                        <span class="resource-tag">Pré-natal</span>
+                        <span class="resource-tag">Pediatria</span>
+                    </div>
+                    <span class="resource-link">Abrir consultas <i class="fa-solid fa-arrow-right"></i></span>
+                </a>
+
+                <a class="resource-card" href="dicas.html">
+                    <span class="resource-icon"><i class="fa-solid fa-lightbulb"></i></span>
+                    <h3>Dicas</h3>
+                    <p>Conteúdos educativos sobre cuidados com o recém-nascido, amamentação e saúde materna.</p>
+                    <div class="resource-tags">
+                        <span class="resource-tag">Amamentação</span>
+                        <span class="resource-tag">Saúde materna</span>
+                    </div>
+                    <span class="resource-link">Ver dicas <i class="fa-solid fa-arrow-right"></i></span>
+                </a>
+
+                <a class="resource-card resource-card-highlight" href="entrar.html">
+                    <span class="resource-icon"><i class="fa-solid fa-comments"></i></span>
+                    <div class="resource-highlight-text">
+                        <h3>Assistente Virtual ValdênIA</h3>
+                        <p>
+                            Suporte inteligente 24h dentro da plataforma para tirar dúvidas rápidas sobre maternidade.
+                            A ValdênIA fica disponível apenas na área autenticada, acompanhando você com acolhimento
+                            e respostas práticas sempre que precisar.
+                        </p>
+                        <div class="resource-tags">
+                            <span class="resource-tag">24 horas</span>
+                            <span class="resource-tag">Dentro da plataforma</span>
+                            <span class="resource-tag">Exclusiva para usuárias</span>
+                        </div>
+                        <span class="resource-link">Entrar para conversar <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="public-section">
+        <div class="container">
+            <div class="public-cta">
+                <h2>Pronta para começar essa jornada com mais apoio?</h2>
+                <p>Crie sua conta gratuitamente e encontre todas as ferramentas do Maternis reunidas em um só lugar.</p>
+                <div class="public-cta-actions">
+                    <a href="cadastrar.html" class="btn-pink">Criar minha conta</a>
+                    <a href="entrar.html" class="btn-outline-pink">Entrar</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="public-footer">
+    © 2026 Maternis • Daniel Melo, Flávio Gustavo, João Vitor.
+</footer>
+
+<script src="js/theme.js" defer></script>
+<script src="js/public-nav.js" defer></script>
+<script src="js/pwa.js" defer></script>
+</body>
+</html>

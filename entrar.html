@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#F78FB3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Maternis">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script>(function(){try{var t=localStorage.getItem('maternis-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-bs-theme',t);}catch(e){}})();</script>
+
+    <title>Entrar • Maternis</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/maternis-theme.css">
+    <link rel="stylesheet" href="css/maternis-ui.css">
+    <link rel="stylesheet" href="css/maternis-auth.css">
+
+    <!-- SDK DO SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="auth-body">
+
+<header class="maternis-pill-nav" aria-label="Navegação principal">
+    <a class="pill-brand" href="index.html" aria-label="Maternis - Início">
+        <span class="pill-brand-icon"><i class="fa-solid fa-heart"></i></span>
+        <span class="pill-brand-text">Maternis</span>
+    </a>
+
+    <nav class="pill-links" aria-label="Seções do site">
+        <a class="pill-link" href="index.html">Início</a>
+        <a class="pill-link" href="recursos.html">Recursos</a>
+        <a class="pill-link" href="sobre.html">Sobre</a>
+    </nav>
+
+    <div class="pill-actions" id="areaUsuarioHome">
+        <a class="pill-action pill-action-ghost" href="cadastrar.html">
+            <i class="fa-solid fa-user-plus"></i> Cadastrar
+        </a>
+        <a class="pill-action pill-action-primary" href="entrar.html" aria-current="page">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar
+        </a>
+    </div>
+</header>
+
+<main class="auth-main">
+    <div class="auth-layout">
+        <aside class="auth-aside" aria-label="Boas-vindas">
+            <span class="auth-aside-icon"><i class="fa-solid fa-heart"></i></span>
+            <h2>Bem-vinda de volta, mamãe.</h2>
+            <p>
+                Seu espaço de cuidado, organização e acolhimento continua aqui. Entre na sua conta
+                para acessar a gestação, o diário do bebê, as vacinas, as consultas e a ValdênIA.
+            </p>
+            <ul class="auth-aside-list">
+                <li><i class="fa-solid fa-check"></i> Acompanhe cada fase da maternidade</li>
+                <li><i class="fa-solid fa-check"></i> Organize vacinas e consultas</li>
+                <li><i class="fa-solid fa-check"></i> Guarde lembranças no Diário do Bebê</li>
+                <li><i class="fa-solid fa-check"></i> Converse com a ValdênIA</li>
+            </ul>
+        </aside>
+
+        <section class="auth-card" aria-labelledby="tituloLogin">
+            <span class="auth-kicker"><i class="fa-solid fa-lock"></i> Acesso à conta</span>
+            <h1 id="tituloLogin">Entrar no Maternis</h1>
+            <p class="auth-subtitle">
+                Informe o e-mail e a senha cadastrados para continuar sua jornada.
+            </p>
+
+            <form class="auth-form" id="formLogin" novalidate>
+                <div class="auth-field">
+                    <label for="emailLogin">E-mail</label>
+                    <input type="email" class="auth-input" id="emailLogin" name="email"
+                        placeholder="seu@email.com" autocomplete="email" required>
+                </div>
+
+                <div class="auth-field">
+                    <label for="senhaLogin">Senha</label>
+                    <div class="auth-input-wrap">
+                        <input type="password" class="auth-input" id="senhaLogin" name="password"
+                            placeholder="Digite sua senha" autocomplete="current-password" minlength="6" required>
+                        <button type="button" class="auth-eye" data-password-toggle="senhaLogin"
+                            aria-label="Mostrar senha">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-submit" id="btnLogin">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar
+                </button>
+            </form>
+
+            <div class="auth-alert" id="feedbackLogin" role="alert" hidden></div>
+
+            <p class="auth-switch">
+                Ainda não tem conta?
+                <a href="cadastrar.html">Cadastrar</a>
+            </p>
+            <p class="auth-note">Seus dados de acesso são protegidos pelo Supabase.</p>
+        </section>
+    </div>
+</main>
+
+<footer class="auth-footer">
+    © 2026 Maternis • Cuidado materno em cada fase.
+</footer>
+
+<script src="js/theme.js" defer></script>
+<script src="js/public-nav.js" defer></script>
+<script src="js/pwa.js" defer></script>
+
+<script>
+    const SUPABASE_URL = "https://llktarpnobeigwgxfwwz.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_OKqhjXKeDyuon0S05JJX-g_zvIl-Kk1";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const formLogin = document.getElementById('formLogin');
+    const feedbackLogin = document.getElementById('feedbackLogin');
+    const btnLogin = document.getElementById('btnLogin');
+
+    function mostrarFeedback(mensagem, tipo) {
+        feedbackLogin.textContent = mensagem;
+        feedbackLogin.className = 'auth-alert is-' + tipo;
+        feedbackLogin.hidden = false;
+    }
+
+    function esconderFeedback() {
+        feedbackLogin.hidden = true;
+        feedbackLogin.textContent = '';
+    }
+
+    document.querySelectorAll('[data-password-toggle]').forEach(function (botao) {
+        botao.addEventListener('click', function () {
+            const campo = document.getElementById(botao.getAttribute('data-password-toggle'));
+            const icone = botao.querySelector('i');
+            if (!campo) return;
+
+            const mostrar = campo.type === 'password';
+            campo.type = mostrar ? 'text' : 'password';
+            botao.setAttribute('aria-label', mostrar ? 'Ocultar senha' : 'Mostrar senha');
+
+            if (icone) {
+                icone.classList.toggle('fa-eye', !mostrar);
+                icone.classList.toggle('fa-eye-slash', mostrar);
+            }
+        });
+    });
+
+    formLogin.addEventListener('submit', async function (evento) {
+        evento.preventDefault();
+        esconderFeedback();
+
+        const email = document.getElementById('emailLogin').value.trim();
+        const password = document.getElementById('senhaLogin').value;
+
+        if (!email || !password) {
+            mostrarFeedback('Preencha o e-mail e a senha para entrar.', 'error');
+            return;
+        }
+
+        btnLogin.disabled = true;
+        const textoOriginal = btnLogin.innerHTML;
+        btnLogin.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Entrando...';
+
+        try {
+            const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+            if (error) {
+                mostrarFeedback('Não foi possível entrar: ' + error.message, 'error');
+                return;
+            }
+
+            window.location.href = 'menu.html';
+        } catch (erro) {
+            mostrarFeedback('Ocorreu um erro ao entrar. Tente novamente.', 'error');
+        } finally {
+            btnLogin.disabled = false;
+            btnLogin.innerHTML = textoOriginal;
+        }
+    });
+</script>
+</body>
+</html>

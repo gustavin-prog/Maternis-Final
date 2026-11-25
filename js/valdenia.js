@@ -1,4 +1,4 @@
-/* Maternis - Assistente Valdênia
+/* Maternis - Assistente ValdênIA
    Chat flutuante com respostas baseadas em palavras-chave. */
 (function () {
   'use strict';
@@ -257,7 +257,7 @@
 
     // Saudações e agradecimentos.
     if (/\b(oi|ola|opa|bom dia|boa tarde|boa noite|e ai|eae)\b/.test(texto)) {
-      return 'Olá, mamãe! 💗 Eu sou a Valdênia, sua assistente de maternidade. Posso ajudar com dúvidas sobre vacinas, sono, amamentação, cólicas, febre, banho e cuidados com o bebê. Sobre o que você gostaria de saber?';
+      return 'Olá, mamãe! 💗 Eu sou a ValdênIA, sua assistente de maternidade. Posso ajudar com dúvidas sobre vacinas, sono, amamentação, cólicas, febre, banho e cuidados com o bebê. Sobre o que você gostaria de saber?';
     }
 
     if (/\b(obrigad[ao]|obrigada|valeu|brigad[ao]|agradeco)\b/.test(texto)) {
@@ -265,7 +265,7 @@
     }
 
     if (/\b(quem e voce|seu nome|qual seu nome|quem é você)\b/.test(texto)) {
-      return 'Eu sou a Valdênia, a assistente virtual do Maternis. Fui criada para acolher mães de primeira viagem com orientações práticas sobre saúde, rotina e cuidados com o bebê. Pergunte à vontade!';
+      return 'Eu sou a ValdênIA, a assistente virtual do Maternis. Fui criada para acolher mães de primeira viagem com orientações práticas sobre saúde, rotina e cuidados com o bebê. Pergunte à vontade!';
     }
 
     return 'Ainda não encontrei uma resposta específica para essa dúvida. 💗 Experimente me perguntar sobre vacinas, sono do bebê, amamentação, choro e cólicas, febre ou cuidados diários como banho e troca de fralda. Para questões de saúde mais delicadas, procure sempre o pediatra.';
@@ -274,11 +274,12 @@
   /* =========================================================
      ESTRUTURA DO CHAT
      ========================================================= */
+  function criarChat() {
   const launcher = document.createElement('button');
   launcher.type = 'button';
   launcher.className = 'valdenia-launcher';
   launcher.id = 'valdeniaLauncher';
-  launcher.setAttribute('aria-label', 'Abrir chat com a assistente Valdênia');
+  launcher.setAttribute('aria-label', 'Abrir chat com a assistente ValdênIA');
   launcher.setAttribute('aria-expanded', 'false');
   launcher.setAttribute('aria-controls', 'valdeniaWindow');
   launcher.innerHTML =
@@ -296,7 +297,7 @@
     '<header class="valdenia-header">' +
       '<span class="valdenia-avatar" aria-hidden="true">V</span>' +
       '<div class="valdenia-header-text">' +
-        '<h2 id="valdeniaTitle">Assistente Valdênia</h2>' +
+        '<h2 id="valdeniaTitle">Assistente ValdênIA</h2>' +
         '<span class="valdenia-status"><span class="valdenia-status-dot"></span> Online agora</span>' +
       '</div>' +
       '<button type="button" class="valdenia-close" aria-label="Fechar chat">' +
@@ -313,7 +314,7 @@
       '<button type="button" class="valdenia-chip" data-question="Febre no bebê">Febre</button>' +
     '</div>' +
     '<form class="valdenia-form" id="valdeniaForm">' +
-      '<input type="text" class="valdenia-input" id="valdeniaInput" placeholder="Escreva sua dúvida..." autocomplete="off" aria-label="Escreva sua mensagem para a Valdênia">' +
+      '<input type="text" class="valdenia-input" id="valdeniaInput" placeholder="Escreva sua dúvida..." autocomplete="off" aria-label="Escreva sua mensagem para a ValdênIA">' +
       '<button type="submit" class="valdenia-send" aria-label="Enviar mensagem">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
           '<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>' +
@@ -387,7 +388,7 @@
 
     const balao = document.createElement('div');
     balao.className = 'valdenia-bubble valdenia-typing';
-    balao.setAttribute('aria-label', 'Valdênia está digitando');
+    balao.setAttribute('aria-label', 'ValdênIA está digitando');
     balao.innerHTML = '<span></span><span></span><span></span>';
 
     linha.appendChild(avatar);
@@ -408,12 +409,12 @@
     janela.setAttribute('aria-hidden', 'false');
     launcher.classList.add('is-open');
     launcher.setAttribute('aria-expanded', 'true');
-    launcher.setAttribute('aria-label', 'Fechar chat com a assistente Valdênia');
+    launcher.setAttribute('aria-label', 'Fechar chat com a assistente ValdênIA');
 
     if (!boasVindasEnviadas) {
       boasVindasEnviadas = true;
       adicionarMensagem(
-        'Olá, mamãe! 💗 Eu sou a Valdênia, sua assistente virtual do Maternis. Posso tirar dúvidas sobre vacinas, sono, amamentação, cólicas, febre e cuidados diários com o bebê. Como posso ajudar hoje?',
+        'Olá, mamãe! 💗 Eu sou a ValdênIA, sua assistente virtual do Maternis. Posso tirar dúvidas sobre vacinas, sono, amamentação, cólicas, febre e cuidados diários com o bebê. Como posso ajudar hoje?',
         'bot'
       );
     }
@@ -431,7 +432,7 @@
     janela.setAttribute('aria-hidden', 'true');
     launcher.classList.remove('is-open');
     launcher.setAttribute('aria-expanded', 'false');
-    launcher.setAttribute('aria-label', 'Abrir chat com a assistente Valdênia');
+    launcher.setAttribute('aria-label', 'Abrir chat com a assistente ValdênIA');
     launcher.focus();
   }
 
@@ -498,4 +499,67 @@
     perguntar: enviarMensagem,
     baseConhecimento: baseConhecimentoValdenia
   };
+  }
+
+  /* =========================================================
+     VISIBILIDADE: SOMENTE ÁREA AUTENTICADA
+     ========================================================= */
+  function paginaInternaPermitida() {
+    var caminho = (window.location.pathname || '').replace(/\\/g, '/');
+    var arquivo = caminho.substring(caminho.lastIndexOf('/') + 1).toLowerCase();
+    var slug = arquivo.replace(/\.html?$/, '');
+
+    return ['menu', 'gestacao', 'bebe', 'vacinas', 'consultas', 'dicas', 'diario']
+      .indexOf(slug) !== -1;
+  }
+
+  // Fallback para quando o SDK estiver offline ou indisponível.
+  function temSessaoLocal() {
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var chave = localStorage.key(i);
+        if (!chave || chave.indexOf('sb-') !== 0 || chave.indexOf('-auth-token') === -1) {
+          continue;
+        }
+
+        var bruto = localStorage.getItem(chave);
+        if (!bruto) continue;
+
+        var sessao = JSON.parse(bruto);
+        if (sessao && (sessao.access_token || sessao.currentSession || sessao.user)) {
+          return true;
+        }
+      }
+    } catch (erro) {
+      return false;
+    }
+
+    return false;
+  }
+
+  async function iniciarSeAutorizado() {
+    if (!paginaInternaPermitida()) return;
+
+    var autenticado = false;
+
+    try {
+      if (typeof supabaseClient !== 'undefined' && supabaseClient && supabaseClient.auth) {
+        var resultado = await supabaseClient.auth.getSession();
+        autenticado = !!(resultado && resultado.data && resultado.data.session);
+      }
+    } catch (erro) {
+      autenticado = temSessaoLocal();
+    }
+
+    if (!autenticado) autenticado = temSessaoLocal();
+    if (!autenticado) return;
+
+    criarChat();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', iniciarSeAutorizado);
+  } else {
+    iniciarSeAutorizado();
+  }
 })();

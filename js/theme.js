@@ -34,7 +34,15 @@
   function shouldShowToggle() {
     var path = (window.location.pathname || '').replace(/\\/g, '/');
     var file = path.substring(path.lastIndexOf('/') + 1).toLowerCase();
-    return file === 'index.html' || file === 'menu.html' || file === '';
+    return (
+      file === 'index.html' ||
+      file === 'menu.html' ||
+      file === 'recursos.html' ||
+      file === 'sobre.html' ||
+      file === 'entrar.html' ||
+      file === 'cadastrar.html' ||
+      file === ''
+    );
   }
 
   function ensureToggle() {
