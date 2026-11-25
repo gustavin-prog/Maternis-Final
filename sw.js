@@ -2,7 +2,7 @@
    Cache dos arquivos estáticos do app para funcionamento offline e instalação. */
 'use strict';
 
-const CACHE_VERSION = 'maternis-v3';
+const CACHE_VERSION = 'maternis-v4';
 const PRECACHE = `maternis-precache-${CACHE_VERSION}`;
 const RUNTIME = `maternis-runtime-${CACHE_VERSION}`;
 
