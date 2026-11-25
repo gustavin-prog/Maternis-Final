@@ -2,7 +2,7 @@
    Cache dos arquivos estáticos do app para funcionamento offline e instalação. */
 'use strict';
 
-const CACHE_VERSION = 'maternis-v4';
+const CACHE_VERSION = 'maternis-v5';
 const PRECACHE = `maternis-precache-${CACHE_VERSION}`;
 const RUNTIME = `maternis-runtime-${CACHE_VERSION}`;
 
@@ -33,6 +33,9 @@ const PRECACHE_URLS = [
   './js/pwa.js',
   './img/bebe.jpg',
   './img/bebe-mao.jpg',
+  './img/desenvolvedores/flavio-gustavo.jpeg',
+  './img/desenvolvedores/daniel-melo.jpeg',
+  './img/desenvolvedores/joao-vitor.jpeg',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/maskable-512.png',

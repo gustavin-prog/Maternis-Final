@@ -41,6 +41,7 @@
   gap: 4px;
   width: max-content;
   max-width: calc(100vw - 32px);
+  box-sizing: border-box;
   padding: 7px 8px 7px 14px;
   border: 1px solid var(--pill-border);
   border-radius: 999px;
@@ -96,6 +97,8 @@
   align-items: center;
   gap: 2px;
   min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .pill-link {
@@ -142,6 +145,9 @@
   align-items: center;
   flex-shrink: 0;
   gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
   margin-left: 4px;
 }
 
@@ -604,40 +610,101 @@ body.has-bottom-nav {
 /* =========================================================
    RESPONSIVIDADE
    ========================================================= */
-@media (max-width: 760px) {
-  /* Menu público: marca e ações na primeira linha e links em uma
-     segunda linha com rolagem horizontal limpa (sem barra aparente). */
+@media (max-width: 768px) {
+  /* Menu público em duas linhas dentro da mesma pílula.
+     A pílula usa no máximo a largura da tela menos 24px, fica centralizada
+     e nunca empurra a página para os lados. */
   .maternis-pill-nav:not(.maternis-pill-nav--menu) {
     top: 10px;
-    left: 64px;
-    right: 12px;
-    width: auto;
-    max-width: none;
+    left: 50%;
+    right: auto;
+    width: max-content;
+    max-width: calc(100vw - 24px);
+    margin: 0 auto;
+    padding: 8px 10px;
+    gap: 4px 6px;
     flex-wrap: wrap;
-    justify-content: space-between;
-    row-gap: 4px;
-    padding: 6px 8px;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
     border-radius: 24px;
-    transform: none;
+    transform: translateX(-50%);
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) > .theme-toggle,
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) > .theme-toggle--inline {
+    position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+    order: 0;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-brand {
+    order: 1;
+    gap: 5px;
+    padding: 0;
+    font-size: 0.82rem;
+    min-width: 0;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-brand-text {
+    display: inline;
+    font-size: 0.82rem;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-brand-icon {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    font-size: 0.8rem;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-actions {
+    order: 2;
+    margin-left: auto;
+    gap: 5px;
+    min-width: 0;
+    flex-shrink: 0;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-action {
+    gap: 5px;
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    border-radius: 999px;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-action i {
+    font-size: 0.72rem;
   }
 
   .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-links {
     order: 3;
     flex: 1 1 100%;
-    justify-content: flex-start;
-    padding-top: 2px;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 6px;
+    padding: 2px 0 0;
+    overflow: visible;
+    min-width: 0;
   }
 
-  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-links::-webkit-scrollbar {
-    display: none;
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-link {
+    padding: 6px 10px;
+    font-size: 0.78rem;
   }
 
-  .pill-brand-text {
-    display: none;
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-label,
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-brand-text {
+    white-space: nowrap;
   }
 
   .pill-brand-icon {
@@ -685,26 +752,100 @@ body.has-bottom-nav {
   }
 }
 
-@media (max-width: 420px) {
+@media (min-width: 390px) and (max-width: 768px) {
+  /* A partir de 390px há espaço para a segunda linha reunir os links e
+     as ações (Cadastrar/Entrar). A linha invisível de 6px faz a quebra
+     entre a marca e o restante, sem alterar o HTML de nenhuma página. */
   .maternis-pill-nav:not(.maternis-pill-nav--menu) {
-    right: 8px;
-    left: 60px;
-    padding: 5px 6px;
+    padding: 8px;
+    gap: 0 6px;
   }
 
-  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-link {
-    padding: 7px 10px;
-    font-size: 0.76rem;
+  .maternis-pill-nav:not(.maternis-pill-nav--menu)::before {
+    content: "";
+    order: 2;
+    flex: 0 0 100%;
+    width: 100%;
+    height: 6px;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-links {
+    order: 3;
+    flex: 0 1 auto;
+    width: auto;
+    gap: 4px;
+    padding: 0;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-actions {
+    order: 4;
+    margin-left: 0;
   }
 
   .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-action {
     padding: 6px 9px;
-    font-size: 0.74rem;
   }
 
-  .pill-brand-icon {
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-link {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Em celulares os ícones das ações saem de cena para preservar os
+     rótulos Cadastrar/Entrar por inteiro, mantendo o LED rosa no hover. */
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-action i {
+    display: none;
+  }
+}
+
+@media (max-width: 340px) {
+  /* Ajuste fino para 320px: mantém marca e ações visíveis com
+     espaçamentos ligeiramente mais compactos. */
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) {
+    padding: 7px 8px;
+    gap: 4px;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) > .theme-toggle,
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) > .theme-toggle--inline {
     width: 30px;
     height: 30px;
+    flex: 0 0 30px;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-brand {
+    gap: 4px;
+    font-size: 0.75rem;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-brand-text {
+    display: inline;
+    font-size: 0.75rem;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-brand-icon {
+    width: 26px;
+    height: 26px;
+    flex: 0 0 26px;
+    font-size: 0.7rem;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-actions {
+    gap: 4px;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-action {
+    gap: 4px;
+    padding: 5px 7px;
+    font-size: 0.75rem;
+  }
+
+  .maternis-pill-nav:not(.maternis-pill-nav--menu) .pill-link {
+    padding: 6px 8px;
+    font-size: 0.75rem;
   }
 }
 

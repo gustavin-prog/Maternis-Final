@@ -45,6 +45,19 @@
     );
   }
 
+  function posicionarToggle(btn) {
+    var header = document.querySelector('.maternis-pill-nav:not(.maternis-pill-nav--menu)');
+    var mobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+
+    if (mobile && header) {
+      if (btn.parentNode !== header) header.insertBefore(btn, header.firstChild);
+      btn.classList.add('theme-toggle--inline');
+    } else {
+      if (btn.parentNode !== document.body) document.body.appendChild(btn);
+      btn.classList.remove('theme-toggle--inline');
+    }
+  }
+
   function ensureToggle() {
     if (!shouldShowToggle() || document.querySelector('.theme-toggle')) return;
     var btn = document.createElement('button');
@@ -55,7 +68,15 @@
       applyTheme(current === 'dark' ? 'light' : 'dark', true);
     });
     document.body.appendChild(btn);
+    posicionarToggle(btn);
     updateToggle(document.documentElement.getAttribute('data-theme') || getPreferredTheme());
+
+    try {
+      var mq = window.matchMedia('(max-width: 768px)');
+      var aoMudar = function () { posicionarToggle(btn); };
+      if (mq.addEventListener) mq.addEventListener('change', aoMudar);
+      else if (mq.addListener) mq.addListener(aoMudar);
+    } catch (e) {}
   }
 
   // API mínima global (útil para depuração)
